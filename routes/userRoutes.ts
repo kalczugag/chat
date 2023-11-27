@@ -17,6 +17,7 @@ export default (app: Express) => {
     });
 
     app.post("/api/auth/sign", passport.authenticate("local"), (req, res) => {
-        res.status(200).send("Success");
+        res.redirect("/");
+        res.status(200).send(req.user);
     });
 };

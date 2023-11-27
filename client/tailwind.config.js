@@ -9,6 +9,7 @@ module.exports = {
             "login-bg": "#15161e",
             "login-input": "#373743",
             "orange-main": "#f6491a",
+            "blue-main": "#1985ff",
             transparent: "transparent",
             current: "currentColor",
             black: colors.black,

@@ -2,6 +2,7 @@ import { Express } from "express";
 import requireLogin from "../middlewares/requireLogin";
 import { Message, IMessage } from "../models/Message";
 import { Chat, IChat } from "../models/Chat";
+import { IUser } from "../models/User";
 
 type paginationFetch = {
     page?: number;
@@ -9,6 +10,21 @@ type paginationFetch = {
 };
 
 export default (app: Express) => {
+    app.get("/api/chat", requireLogin, async (req, res) => {
+        const user = req.user;
+
+        try {
+            const userChats = await Chat.find({
+                users: user,
+            });
+
+            return res.status(200).send(userChats);
+        } catch (err) {
+            console.log("Error getting chats: ", err);
+            return res.status(500).send("Internal Server Error");
+        }
+    });
+
     app.get("/api/chat/:chatId", requireLogin, async (req, res) => {
         const chatId = req.params.chatId;
         const { page = 1, pageSize = 10 }: paginationFetch = req.query; // Default page is 1, default pageSize is 10
