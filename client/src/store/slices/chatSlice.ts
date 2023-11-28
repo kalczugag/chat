@@ -1,9 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchChats } from "../thunks/fetchChats";
-import { IChat } from "../../../../models/Chat";
+import { IUser } from "../../../../models/User";
+
+export interface IChatState {
+    _id: string;
+    chatName: string;
+    isGroupChat: boolean;
+    users: IUser[];
+    latestMessage?: string;
+    groupAdmin?: string;
+}
 
 export type ChatState = {
-    data: null | IChat;
+    data: null | IChatState[];
     isLoading: boolean;
     error: any;
 };
