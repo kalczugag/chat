@@ -18,8 +18,8 @@ const LoginForm = ({ onSubmit, action, isLoading }: LoginFormProps) => {
                     <p className="text-gray-400">
                         Set a username and password to get started
                     </p>
-                    <InputField name="username" />
-                    <InputField name="password" />
+                    <InputField name="username" type="text" />
+                    <InputField name="password" type="password" />
                     <button
                         className="bg-orange-main p-2 w-full rounded"
                         disabled={isLoading}

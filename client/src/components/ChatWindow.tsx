@@ -1,5 +1,9 @@
+import { useParams } from "react-router-dom";
+
 const ChatWindow = () => {
-    return <div className="bg-login-input w-full p-4 rounded-md">chat</div>;
+    const { chatId } = useParams();
+
+    return <div className="bg-login-input w-full p-4 rounded-md">{chatId}</div>;
 };
 
 export default ChatWindow;

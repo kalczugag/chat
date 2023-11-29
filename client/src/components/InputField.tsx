@@ -3,9 +3,10 @@ import { Field } from "react-final-form";
 
 type InputFieldTypes = {
     name: string;
+    type: string;
 };
 
-const InputField = ({ name }: InputFieldTypes) => {
+const InputField = ({ name, type }: InputFieldTypes) => {
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [isEmpty, setIsEmpty] = useState<boolean>(true);
 
@@ -27,7 +28,7 @@ const InputField = ({ name }: InputFieldTypes) => {
                     <input
                         {...input}
                         className="relative p-2 w-full rounded bg-login-input"
-                        type="text"
+                        type={type}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => {
                             setIsFocused(false);

@@ -1,11 +1,11 @@
 import Sidebar from "../components/Sidebar";
-import ChatWindow from "../components/ChatWindow";
+import { Outlet } from "react-router-dom";
 
 const DashboardPage = () => {
     return (
         <div className="flex flex-row p-2">
             <Sidebar />
-            <ChatWindow />
+            <Outlet />
         </div>
     );
 };

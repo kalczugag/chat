@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { IChatState } from "../store/slices/chatSlice";
 
 type ChatsListItemProps = {
@@ -6,15 +7,16 @@ type ChatsListItemProps = {
 };
 
 const ChatsListItem = ({ data }: ChatsListItemProps) => {
-    const { chatName, users, latestMessage } = data;
+    const { _id, chatName, users, latestMessage } = data;
     const location = useLocation();
 
-    const isActive = location.pathname === `/chats/${data._id}`;
+    const isActive = location.pathname === `/chats/${_id}`;
     const activeClass = isActive ? "bg-blue-main" : "";
 
     return (
-        <button
+        <Link
             className={`flex flex-row items-center space-x-4 ${activeClass} rounded-md p-4`}
+            to={`/chats/${_id}`}
         >
             {users.length > 1 ? (
                 <div>
@@ -42,7 +44,7 @@ const ChatsListItem = ({ data }: ChatsListItemProps) => {
                     {latestMessage || "Say hello"}
                 </p>
             </div>
-        </button>
+        </Link>
     );
 };
 
