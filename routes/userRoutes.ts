@@ -3,6 +3,12 @@ import passport from "passport";
 import requireLogin from "../middlewares/requireLogin";
 
 export default (app: Express) => {
+    app.get("/", (req, res) => {
+        if (!req.user) {
+            return res.redirect(404, "/login");
+        }
+    });
+
     app.get("/api/auth/current_user", requireLogin, (req, res) => {
         res.send(req.user);
     });
@@ -17,7 +23,6 @@ export default (app: Express) => {
     });
 
     app.post("/api/auth/sign", passport.authenticate("local"), (req, res) => {
-        res.redirect("/");
-        res.status(200).send(req.user);
+        res.redirect(200, "/");
     });
 };

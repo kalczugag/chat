@@ -14,19 +14,25 @@ export interface IChatState {
 export type ChatState = {
     data: null | IChatState[];
     isLoading: boolean;
+    isOpen: boolean;
     error: any;
 };
 
 const initialState: ChatState = {
     data: null,
     isLoading: false,
+    isOpen: true,
     error: null,
 };
 
 const chatSlice = createSlice({
     name: "chat",
     initialState,
-    reducers: {},
+    reducers: {
+        setChatWindow(state, action) {
+            state.isOpen = action.payload;
+        },
+    },
     extraReducers(builder) {
         builder.addCase(fetchChats.pending, (state, action) => {
             state.isLoading = true;
@@ -43,3 +49,4 @@ const chatSlice = createSlice({
 });
 
 export const chatReducer = chatSlice.reducer;
+export const { setChatWindow } = chatSlice.actions;

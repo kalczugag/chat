@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useThunk } from "../hooks/use-thunk";
 import { fetchChats, RootState } from "../store";
 import { ChatState } from "../store/slices/chatSlice";
-import { MdOpenInNew } from "react-icons/md";
 import ChatsListItem from "./ChatsListItem";
 
 const ChatsList = () => {
@@ -28,13 +27,7 @@ const ChatsList = () => {
     });
 
     return (
-        <div className="flex flex-col p-4">
-            <div className="flex flex-row justify-between items-center text-white pb-8">
-                <h2 className="text-2xl font-bold">Chats</h2>
-                <button className="text-xl">
-                    <MdOpenInNew />
-                </button>
-            </div>
+        <div className="">
             <div className="flex flex-col space-y-2">{renderedChats}</div>
         </div>
     );

@@ -1,5 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useNav } from "../../hooks/use-nav";
 
 interface ISignUser {
     username: string;
@@ -12,6 +13,7 @@ export const handleSignUser = createAsyncThunk(
     "user/sign",
     async (data: ISignUser) => {
         const response = await axios.post("/api/auth/sign", data);
+        useNav("/");
 
         return response.data;
     }

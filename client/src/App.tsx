@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useThunk } from "./hooks/use-thunk";
 import { useUser } from "./hooks/use-user";
 import { fetchUser } from "./store";
@@ -25,7 +25,7 @@ const App = () => {
 
     return (
         <div className="h-screen w-screen bg-login-bg">
-            {!user ? <Navigate to="/login" /> : <Navigate to="/" />}
+            {/* {isLoadingUser ? <Navigate to="/login" /> : <Navigate to="/" />} */}
             <Routes>
                 <Route path="/" element={<DashboardPage />}>
                     <Route path="/chats/:chatId" element={<ChatWindow />} />

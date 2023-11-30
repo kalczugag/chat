@@ -1,10 +1,41 @@
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { isMobile } from "react-device-detect";
+import { RootState, setChatWindow } from "../store";
 import Sidebar from "../components/Sidebar";
-import { Outlet } from "react-router-dom";
 
 const DashboardPage = () => {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const dispatch = useDispatch();
+    const { isOpen } = useSelector((state: RootState) => state.chat);
+
+    // console.log(isMobile);
+
+    useEffect(() => {
+        const handlePopstate = () => {
+            navigate("/");
+        };
+
+        window.addEventListener("popstate", handlePopstate);
+
+        return () => {
+            window.removeEventListener("popstate", handlePopstate);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (location.pathname === "/") {
+            dispatch(setChatWindow(true));
+        } else {
+            dispatch(setChatWindow(false));
+        }
+    }, [location.pathname, dispatch]);
+
     return (
-        <div className="flex flex-row p-2">
-            <Sidebar />
+        <div className="flex p-2 md:flex-row">
+            {isMobile && !isOpen ? "" : <Sidebar />}
             <Outlet />
         </div>
     );
