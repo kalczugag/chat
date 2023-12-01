@@ -24,7 +24,7 @@ const App = () => {
     }
 
     return (
-        <div className="h-screen w-screen bg-login-bg">
+        <div className="h-screen bg-login-bg">
             {/* {isLoadingUser ? <Navigate to="/login" /> : <Navigate to="/" />} */}
             <Routes>
                 <Route path="/" element={<DashboardPage />}>

@@ -1,5 +1,5 @@
 import { Form } from "react-final-form";
-import InputField from "./InputField";
+import InputField from "./LoginInputField";
 import { FormAction } from "../pages/LoginPage";
 
 type LoginFormProps = {
