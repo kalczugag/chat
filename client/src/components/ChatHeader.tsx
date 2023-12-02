@@ -1,10 +1,10 @@
 import { IChatState } from "../store";
 
-type ChatHeaderTypes = {
+type TChatHeader = {
     data: string;
 };
 
-const ChatHeader = ({ data }: ChatHeaderTypes) => {
+const ChatHeader = ({ data }: TChatHeader) => {
     return (
         <div className="flex flex-row justify-between p-2 pb-6 shadow-md">
             <div className="flex flex-row space-x-6 items-center">

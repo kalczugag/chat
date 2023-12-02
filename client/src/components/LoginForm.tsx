@@ -2,13 +2,13 @@ import { Form } from "react-final-form";
 import InputField from "./LoginInputField";
 import { FormAction } from "../pages/LoginPage";
 
-type LoginFormProps = {
+type TLoginFormProps = {
     onSubmit: (values: object, action: FormAction) => void;
     action: FormAction;
     isLoading: boolean;
 };
 
-const LoginForm = ({ onSubmit, action, isLoading }: LoginFormProps) => {
+const LoginForm = ({ onSubmit, action, isLoading }: TLoginFormProps) => {
     return (
         <Form
             onSubmit={(values) => onSubmit(values, action)}

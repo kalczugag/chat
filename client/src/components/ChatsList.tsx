@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useThunk } from "../hooks/use-thunk";
 import { fetchChats, RootState } from "../store";
-import { ChatState } from "../store/slices/chatSlice";
+import { TChatState } from "../store/slices/chatSlice";
 import ChatsListItem from "./ChatsListItem";
 
 const ChatsList = () => {
     const [doFetchChats, fetchingChats] = useThunk(fetchChats);
-    const { data, isLoading }: ChatState = useSelector(
+    const { data, isLoading }: TChatState = useSelector(
         (state: RootState) => state.chat
     );
 

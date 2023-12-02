@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Field } from "react-final-form";
 
-type InputFieldTypes = {
+type TInputField = {
     name: string;
     type: string;
 };
 
-const InputField = ({ name, type }: InputFieldTypes) => {
+const InputField = ({ name, type }: TInputField) => {
     const [isFocused, setIsFocused] = useState<boolean>(false);
     const [isEmpty, setIsEmpty] = useState<boolean>(true);
 

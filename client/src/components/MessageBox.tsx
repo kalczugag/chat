@@ -5,21 +5,21 @@ type UserType = {
     username: string;
 };
 
-type DataTypes = {
+type TData = {
     sender: string;
     content: { text?: string; img?: string; file?: any };
     chatId: string;
     readBy?: UserType[];
 };
 
-type MessageBoxTypes = {
+type TMessageBox = {
     // data: DataTypes;
     sender: number;
 };
 
 //demo for tests
 //without dynamic props
-const MessageBox = ({ sender }: MessageBoxTypes) => {
+const MessageBox = ({ sender }: TMessageBox) => {
     const { user } = useUser();
 
     const imSender = (

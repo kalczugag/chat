@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useThunk } from "./hooks/use-thunk";
 import { useUser } from "./hooks/use-user";
+import io from "socket.io-client";
 import { fetchUser } from "./store";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -18,6 +19,13 @@ const App = () => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [doFetchUser, user]);
+
+    useEffect(() => {
+        const socket = io();
+        return () => {
+            socket.close();
+        };
+    }, []);
 
     if (isLoadingUser) {
         return <LoadingPage />;

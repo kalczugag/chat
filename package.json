@@ -4,10 +4,9 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "start": "node ./dist",
-        "server": "concurrently \"nodemon ./dist\" \"tsc -w\"",
-        "client": "npm run start --prefix client",
-        "dev": "concurrently \"npm run server\" \"npm run client\""
+        "start": "node dist/index.js",
+        "dev": "concurrently  \"ts-node-dev index.ts\" \"npm run start --prefix client\"",
+        "build": "tsc"
     },
     "keywords": [],
     "author": "",
@@ -23,6 +22,7 @@
         "@types/passport": "^1.0.15",
         "@types/passport-local": "^1.0.38",
         "@types/react": "^18.2.38",
+        "@types/uuid": "^9.0.7",
         "axios": "^1.6.2",
         "bcrypt": "^5.1.1",
         "body-parser": "^1.20.2",
@@ -34,6 +34,9 @@
         "nodemon": "^3.0.1",
         "passport": "^0.5.3",
         "passport-local": "^1.0.0",
-        "socket.io": "^4.7.2"
+        "socket.io": "^4.7.2",
+        "ts-node": "^10.9.1",
+        "ts-node-dev": "^2.0.0",
+        "uuid": "^9.0.1"
     }
 }

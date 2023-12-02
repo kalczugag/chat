@@ -11,14 +11,14 @@ export interface IChatState {
     groupAdmin?: string;
 }
 
-export type ChatState = {
+export type TChatState = {
     data: null | IChatState[];
     isLoading: boolean;
     isOpen: boolean;
     error: any;
 };
 
-const initialState: ChatState = {
+const initialState: TChatState = {
     data: null,
     isLoading: false,
     isOpen: true,

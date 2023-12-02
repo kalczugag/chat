@@ -2,11 +2,11 @@ import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { IChatState, setChatWindow } from "../store";
 
-type ChatsListItemProps = {
+type TChatsListItemProps = {
     data: IChatState;
 };
 
-const ChatsListItem = ({ data }: ChatsListItemProps) => {
+const ChatsListItem = ({ data }: TChatsListItemProps) => {
     const dispatch = useDispatch();
     const { _id, chatName, users, latestMessage } = data;
     const location = useLocation();

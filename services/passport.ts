@@ -5,7 +5,7 @@ import authUtils from "../utils/auth";
 
 passport.serializeUser((user: any, done) => {
     const typedUser = user as IUser;
-    done(null, typedUser.id);
+    done(null, typedUser._id);
 });
 
 passport.deserializeUser((id, done) => {
