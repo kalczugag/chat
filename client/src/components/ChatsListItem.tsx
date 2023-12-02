@@ -36,7 +36,7 @@ const ChatsListItem = ({ data }: ChatsListItemProps) => {
                     alt="avatar"
                 />
             </div>
-            <div className="flex flex-col font-semibold">
+            <div className="hidden flex-col font-semibold md:flex">
                 <h3 className="text-white">{chatName}</h3>
                 <p className="text-start text-sm text-gray-400">
                     {latestMessage || "Say hello"}

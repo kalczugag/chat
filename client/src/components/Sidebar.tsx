@@ -1,9 +1,14 @@
 import { MdOpenInNew } from "react-icons/md";
+import { isMobile } from "react-device-detect";
 import ChatsList from "./ChatsList";
 
 const Sidebar = () => {
     return (
-        <div className="flex flex-col w-screen p-4 md:w-1/3">
+        <div
+            className={`flex flex-col p-4 ${
+                isMobile ? "w-screen" : "w-auto"
+            } md:w-1/3`}
+        >
             <div className="flex flex-row justify-between items-center text-white pb-8">
                 <h2 className="text-2xl font-bold">Chats</h2>
                 <button className="text-xl">

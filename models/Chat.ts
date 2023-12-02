@@ -16,6 +16,7 @@ const chatSchema = new Schema<IChat>(
         latestMessage: {
             type: Schema.Types.ObjectId,
             ref: "Message",
+            default: "Say Hello",
             required: false,
         },
         groupAdmin: { type: Schema.Types.ObjectId, ref: "User" },
