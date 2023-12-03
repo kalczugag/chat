@@ -22,6 +22,15 @@ const App = () => {
 
     useEffect(() => {
         const socket = io();
+
+        socket.on("connect", () => {
+            console.log("Socket connected:", socket.id);
+        });
+
+        socket.on("connect_error", (error) => {
+            console.error("Socket connection error:", error);
+        });
+
         return () => {
             socket.close();
         };

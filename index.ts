@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
 import passport from "passport";
 import mongoose from "mongoose";
+import cors from "cors";
 import path from "path";
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
@@ -16,6 +17,7 @@ mongoose.connect(keys.mongoURI!);
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(
     cookieSession({
@@ -28,9 +30,10 @@ app.use(passport.session());
 
 const http = createServer(app);
 export const io = new Server(http);
+import { SocketServer } from "./services/socket";
 
 io.on("connection", (socket: Socket) => {
-    console.log(socket.id, "connected");
+    SocketServer(socket);
 });
 
 import userRoutes from "./routes/userRoutes";

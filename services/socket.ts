@@ -1,38 +1,17 @@
-import { Server as HTTPServer } from "http";
-import { Socket, Server } from "socket.io";
-import { v4 } from "uuid";
+import { Socket } from "socket.io";
 
-export class ServerSocket {
-    public static instance: ServerSocket;
-    public io: Server;
+export const SocketServer = (socket: Socket) => {
+    socket.on("joinRoom", (id: string) => {
+        socket.join(id);
+        // console.log({ joinRoom: (socket as any).adapter.rooms })
+    });
 
-    public users: { [uid: string]: string };
+    socket.on("outRoom", (id: string) => {
+        socket.leave(id);
+        // console.log({ outRoom: (socket as any).adapter.rooms })
+    });
 
-    constructor(server: HTTPServer) {
-        ServerSocket.instance = this;
-        this.users = {};
-        this.io = new Server(server, {
-            serveClient: false,
-            pingInterval: 10000,
-            pingTimeout: 5000,
-            cookie: false,
-            cors: {
-                origin: "*",
-            },
-        });
-
-        this.io.on("connect", this.StartListeners);
-
-        console.info("Socket IO started");
-    }
-
-    StartListeners = (socket: Socket) => {
-        console.log(socket.id);
-        socket.on(
-            "custom-event",
-            (number: number, string: string, obj: object) => {
-                console.log(number, string, obj);
-            }
-        );
-    };
-}
+    socket.on("disconnect", () => {
+        console.log(socket.id + " disconnected");
+    });
+};
