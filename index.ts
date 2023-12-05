@@ -1,12 +1,12 @@
 import express from "express";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 import passport from "passport";
 import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
 import keys from "./config/keys";
 import "./models/Chat";
 import "./models/User";
@@ -16,6 +16,13 @@ import "./services/passport";
 mongoose.connect(keys.mongoURI!);
 
 const app = express();
+
+const httpServer = createServer(app);
+const io = new Server(httpServer);
+
+io.on("connection", (socket: Socket) => {
+    console.log(socket.id);
+});
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -27,14 +34,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-const http = createServer(app);
-export const io = new Server(http);
-import { SocketServer } from "./services/socket";
-
-io.on("connection", (socket: Socket) => {
-    SocketServer(socket);
-});
 
 import userRoutes from "./routes/userRoutes";
 import chatRoutes from "./routes/chatRoutes";
@@ -51,4 +50,4 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const PORT = process.env.PORT || 5000;
-http.listen(PORT);
+httpServer.listen(PORT);

@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { useThunk } from "./hooks/use-thunk";
 import { useUser } from "./hooks/use-user";
-import io from "socket.io-client";
 import { fetchUser } from "./store";
+import { io, Socket } from "socket.io-client";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoadingPage from "./pages/LoadingPage";
@@ -21,19 +21,13 @@ const App = () => {
     }, [doFetchUser, user]);
 
     useEffect(() => {
-        const socket = io();
+        const socket = io("http://localhost:5000", {
+            transports: ["websocket"],
+        });
 
         socket.on("connect", () => {
-            console.log("Socket connected:", socket.id);
+            console.log(socket);
         });
-
-        socket.on("connect_error", (error) => {
-            console.error("Socket connection error:", error);
-        });
-
-        return () => {
-            socket.close();
-        };
     }, []);
 
     if (isLoadingUser) {

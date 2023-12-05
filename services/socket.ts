@@ -1,17 +1,8 @@
-import { Socket } from "socket.io";
+import { createServer } from "http";
+import { Server, Socket } from "socket.io";
 
-export const SocketServer = (socket: Socket) => {
-    socket.on("joinRoom", (id: string) => {
-        socket.join(id);
-        // console.log({ joinRoom: (socket as any).adapter.rooms })
-    });
+const io = new Server(8800, {});
 
-    socket.on("outRoom", (id: string) => {
-        socket.leave(id);
-        // console.log({ outRoom: (socket as any).adapter.rooms })
-    });
+let activeUsers: any[];
 
-    socket.on("disconnect", () => {
-        console.log(socket.id + " disconnected");
-    });
-};
+io.on("connection", (socket: Socket) => {});
