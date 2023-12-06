@@ -1,8 +1,15 @@
-import { createServer } from "http";
+import { Server as HttpServer } from "http";
 import { Server, Socket } from "socket.io";
+import { IMessage } from "../models/Message";
 
-const io = new Server(8800, {});
+export default (httpServer: HttpServer) => {
+    const io = new Server(httpServer);
 
-let activeUsers: any[];
+    io.on("connection", (socket: Socket) => {
+        socket.on("send-msg", (msg: IMessage) => {
+            console.log(msg);
 
-io.on("connection", (socket: Socket) => {});
+            io.emit("send-msg", msg);
+        });
+    });
+};

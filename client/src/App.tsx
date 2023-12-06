@@ -1,15 +1,17 @@
 import { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { useThunk } from "./hooks/use-thunk";
 import { useUser } from "./hooks/use-user";
-import { fetchUser } from "./store";
-import { io, Socket } from "socket.io-client";
+import { fetchUser, setSocket } from "./store";
+import { io } from "socket.io-client";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoadingPage from "./pages/LoadingPage";
 import ChatWindow from "./components/ChatWindow";
 
 const App = () => {
+    const dispatch = useDispatch();
     const [doFetchUser, isLoadingUser] = useThunk(fetchUser);
     const { user } = useUser();
 
@@ -26,7 +28,7 @@ const App = () => {
         });
 
         socket.on("connect", () => {
-            console.log(socket);
+            dispatch(setSocket(socket));
         });
     }, []);
 

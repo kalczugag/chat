@@ -3,13 +3,13 @@ import { fetchUser } from "../thunks/fetchUser";
 import { handleSignUser } from "../thunks/handleSignUser";
 import { IUser } from "../../../../models/User";
 
-export type AuthState = {
+export interface IAuthState {
     user: null | IUser;
     isLoading: boolean;
     error: any;
-};
+}
 
-const initialState: AuthState = {
+const initialState: IAuthState = {
     user: null,
     isLoading: false,
     error: null,

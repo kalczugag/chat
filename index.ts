@@ -1,13 +1,13 @@
 import express from "express";
+import { createServer } from "http";
 import bodyParser from "body-parser";
 import cookieSession from "cookie-session";
-import { createServer } from "http";
-import { Server, Socket } from "socket.io";
 import passport from "passport";
 import mongoose from "mongoose";
 import cors from "cors";
 import path from "path";
 import keys from "./config/keys";
+import socket from "./services/socket";
 import "./models/Chat";
 import "./models/User";
 import "./models/Message";
@@ -16,13 +16,9 @@ import "./services/passport";
 mongoose.connect(keys.mongoURI!);
 
 const app = express();
-
 const httpServer = createServer(app);
-const io = new Server(httpServer);
 
-io.on("connection", (socket: Socket) => {
-    console.log(socket.id);
-});
+socket(httpServer);
 
 app.use(cors());
 app.use(bodyParser.json());
