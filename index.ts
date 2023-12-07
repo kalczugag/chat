@@ -18,8 +18,6 @@ mongoose.connect(keys.mongoURI!);
 const app = express();
 const httpServer = createServer(app);
 
-socket(httpServer);
-
 app.use(cors());
 app.use(bodyParser.json());
 app.use(
@@ -30,6 +28,8 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+
+socket(httpServer);
 
 import userRoutes from "./routes/userRoutes";
 import chatRoutes from "./routes/chatRoutes";

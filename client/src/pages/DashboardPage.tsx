@@ -34,7 +34,7 @@ const DashboardPage = () => {
     }, [location.pathname, dispatch]);
 
     return (
-        <div className="flex p-4 h-full md:px-12 md:flex-row">
+        <div className="flex px-4 pt-4 h-full md:px-12 md:flex-row">
             {isMobile && !isOpen ? "" : <Sidebar />}
             <Outlet />
         </div>

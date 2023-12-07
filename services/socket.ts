@@ -6,10 +6,13 @@ export default (httpServer: HttpServer) => {
     const io = new Server(httpServer);
 
     io.on("connection", (socket: Socket) => {
-        socket.on("send-msg", (msg: IMessage) => {
-            console.log(msg);
+        console.log("user connected ", socket.id);
 
-            io.emit("send-msg", msg);
+        socket.on("send_msg", (msg: any) => {
+            // io.emit("send_msg", msg);
+
+            socket.broadcast.emit("receive_msg", msg);
+            console.log(msg);
         });
     });
 };

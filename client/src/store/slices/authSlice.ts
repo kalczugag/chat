@@ -1,10 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchUser } from "../thunks/fetchUser";
 import { handleSignUser } from "../thunks/handleSignUser";
-import { IUser } from "../../../../models/User";
 
 export interface IAuthState {
-    user: null | IUser;
+    user: null | {
+        _id?: string;
+        username: string;
+        pic?: string;
+        isAdmin?: boolean;
+    };
     isLoading: boolean;
     error: any;
 }

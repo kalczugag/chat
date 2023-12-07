@@ -7,9 +7,5 @@ export const useSocket = () => {
         (state: RootState) => state.socket
     );
 
-    if (socket) {
-        return socket;
-    }
-
-    return { msg: "No socket found" };
+    return socket!;
 };
