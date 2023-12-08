@@ -3,23 +3,31 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { RootState } from "../store";
 import { useSocket } from "../hooks/use-socket";
-import { IMsgData } from "../store/slices/messagesSlice";
+import { useUser } from "../hooks/use-user";
+import { IMsgData, addMessage } from "../store/slices/messagesSlice";
 import ChatHeader from "./ChatHeader";
-import MessageBox from "./MessageBox";
 import MsgContentInput from "./MsgContentInput";
+import MessagesList from "./MessagesList";
 
 const ChatWindow = () => {
     const dispatch = useDispatch();
-    const { chatId } = useParams();
     const socket = useSocket();
+    const { chatId } = useParams();
+    const { user } = useUser();
     const { isOpen } = useSelector((state: RootState) => state.chat);
 
     useEffect(() => {
         if (socket && "on" in socket)
             socket.on("receive_msg", (msg: IMsgData) => {
-                console.log(msg);
+                handleAddMsgToState(msg);
             });
     }, [socket]);
+
+    console.log(user);
+
+    const handleAddMsgToState = (msg: IMsgData) => {
+        dispatch(addMessage(msg));
+    };
 
     return (
         <div className="flex flex-col w-full">
@@ -29,8 +37,12 @@ const ChatWindow = () => {
                     isOpen && "hidden"
                 }`}
             >
-                <MessageBox sender={1} />
-                <MsgContentInput socket={socket} />
+                <MessagesList />
+                <MsgContentInput
+                    chatId={chatId}
+                    socket={socket}
+                    addMsgFn={handleAddMsgToState}
+                />
             </div>
         </div>
     );

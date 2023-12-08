@@ -5,7 +5,7 @@ export interface IMsgData {
     sender?: string;
     content?: IContentItem;
     chatId?: string;
-    readBy: string;
+    readBy?: string;
 }
 
 interface IMessages {
@@ -32,3 +32,4 @@ const messagesSlice = createSlice({
 });
 
 export const messagesReducer = messagesSlice.reducer;
+export const { addMessage } = messagesSlice.actions;

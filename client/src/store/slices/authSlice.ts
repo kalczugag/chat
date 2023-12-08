@@ -3,12 +3,12 @@ import { fetchUser } from "../thunks/fetchUser";
 import { handleSignUser } from "../thunks/handleSignUser";
 
 export interface IAuthState {
-    user: null | {
-        _id?: string;
+    user: {
+        _id: string;
         username: string;
         pic?: string;
         isAdmin?: boolean;
-    };
+    } | null;
     isLoading: boolean;
     error: any;
 }

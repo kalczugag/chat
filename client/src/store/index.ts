@@ -20,6 +20,8 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export * from "./slices/chatSlice";
 export * from "./slices/socket";
+export * from "./slices/messagesSlice";
 export * from "./thunks/fetchUser";
 export * from "./thunks/fetchChats";
+export * from "./thunks/fetchMessages";
 export * from "./thunks/handleSignUser";

@@ -6,22 +6,27 @@ import { IMsgData } from "../store/slices/messagesSlice";
 
 type TMsgInput = {
     socket: Socket;
+    chatId?: string;
+    addMsgFn: (msg: IMsgData) => void;
 };
 
-const MsgContentInput = ({ socket }: TMsgInput) => {
+const defaultValues: IMsgData = {
+    sender: "",
+    content: { text: "" },
+    chatId: "",
+    readBy: "",
+};
+
+const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     const { user } = useUser();
-    const [inputValue, setInputValue] = useState<IMsgData>({
-        sender: user?._id,
-        content: { text: "" },
-        chatId: "123",
-        readBy: "",
-    });
+    const [inputValue, setInputValue] = useState<IMsgData>(defaultValues);
 
     const handleSendMessage = () => {
         if ("emit" in socket) {
             if (inputValue) {
                 socket.emit("send_msg", inputValue);
-                setInputValue({ ...inputValue, content: { text: "" } });
+                addMsgFn(inputValue);
+                setInputValue(defaultValues);
             }
         } else {
             console.error("Invalid socket:", socket);
@@ -32,8 +37,8 @@ const MsgContentInput = ({ socket }: TMsgInput) => {
         setInputValue({
             sender: user?._id,
             content: { text: event.target.value },
-            chatId: "123",
-            readBy: "",
+            chatId,
+            readBy: user?._id,
         });
     };
 
