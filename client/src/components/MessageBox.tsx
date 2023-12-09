@@ -5,7 +5,6 @@ type TMessageBox = {
     data: IMsgData;
 };
 
-//todo content wrap
 const MessageBox = ({ data }: TMessageBox) => {
     const { user } = useUser();
 

@@ -11,8 +11,6 @@ const DashboardPage = () => {
     const dispatch = useDispatch();
     const { isOpen } = useSelector((state: RootState) => state.chat);
 
-    // console.log(isMobile);
-
     useEffect(() => {
         const handlePopstate = () => {
             navigate("/");

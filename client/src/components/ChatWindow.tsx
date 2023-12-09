@@ -23,8 +23,6 @@ const ChatWindow = () => {
             });
     }, [socket]);
 
-    console.log(user);
-
     const handleAddMsgToState = (msg: IMsgData) => {
         dispatch(addMessage(msg));
     };
