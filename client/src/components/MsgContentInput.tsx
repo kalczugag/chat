@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import { RootState, IChatState } from "../store";
 import { Socket } from "socket.io-client";
 import { useUser } from "../hooks/use-user";
 import { IoMdArrowDropup } from "react-icons/io";
 import { IMsgData } from "../store/slices/messagesSlice";
+import { findChatById } from "../utils/functions/findChatById";
 
 type TMsgInput = {
     socket: Socket;
@@ -21,15 +24,28 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     const { user } = useUser();
     const [inputValue, setInputValue] = useState<IMsgData>(defaultValues);
 
+    const chatData = useSelector((state: RootState) => {
+        if (chatId) return findChatById(state, chatId);
+    });
+
     const handleSendMessage = () => {
-        if ("emit" in socket) {
-            if (inputValue) {
-                socket.emit("send_msg", inputValue);
+        if (inputValue) {
+            if ("emit" in socket) {
+                if (chatData?.isGroupChat) {
+                    socket.emit(
+                        "send_msg",
+                        inputValue,
+                        `group/${chatData?._id}`
+                    );
+                } else {
+                    socket.emit("send_msg", inputValue, `priv/${chatData}`);
+                }
+
                 addMsgFn(inputValue);
                 setInputValue(defaultValues);
             }
         } else {
-            console.error("Invalid socket:", socket);
+            console.error("Value can't be empty");
         }
     };
 

@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { RootState } from "../store";
 import { useSocket } from "../hooks/use-socket";
 import { useUser } from "../hooks/use-user";
+import { findChatById } from "../utils/functions/findChatById";
 import { IMsgData, addMessage } from "../store/slices/messagesSlice";
 import ChatHeader from "./ChatHeader";
 import MsgContentInput from "./MsgContentInput";
@@ -14,7 +15,17 @@ const ChatWindow = () => {
     const socket = useSocket();
     const { chatId } = useParams();
     const { user } = useUser();
+
     const { isOpen } = useSelector((state: RootState) => state.chat);
+    const chatData = useSelector((state: RootState) => {
+        if (chatId) return findChatById(state, chatId);
+    });
+
+    useEffect(() => {
+        if (chatData?.isGroupChat && socket && "emit" in socket) {
+            socket.emit("join_group", chatId);
+        }
+    });
 
     useEffect(() => {
         if (socket && "on" in socket)
