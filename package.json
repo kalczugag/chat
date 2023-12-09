@@ -7,7 +7,7 @@
         "start": "node dist/index.js",
         "server": "ts-node-dev index.ts",
         "dev": "concurrently  \"ts-node-dev index.ts\" \"npm run start --prefix client\"",
-        "build": "tsc"
+        "build": "npm install && npm install --prefix client && npm run build --prefix client"
     },
     "keywords": [],
     "author": "",
