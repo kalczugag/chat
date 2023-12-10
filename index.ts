@@ -38,10 +38,12 @@ userRoutes(app);
 chatRoutes(app);
 
 if (process.env.NODE_ENV === "production") {
+    const clientBuildPath = path.join(__dirname, "../client/build");
+
     app.use(express.static("client/build", { maxAge: 86400000 * 30 }));
 
     app.get("*", (req, res) => {
-        res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+        res.sendFile(path.join(clientBuildPath, "index.html"));
     });
 }
 
