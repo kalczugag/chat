@@ -23,7 +23,12 @@ const App = () => {
     }, [doFetchUser, user]);
 
     useEffect(() => {
-        const socket = io("http://localhost:5000", {
+        const serverURI =
+            process.env.NODE_ENV === "production"
+                ? "https://chat-08j1.onrender.com"
+                : "http://localhost:5000";
+
+        const socket = io(serverURI, {
             transports: ["websocket"],
         });
 
