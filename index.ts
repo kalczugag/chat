@@ -18,7 +18,12 @@ mongoose.connect(keys.mongoURI!);
 const app = express();
 const httpServer = createServer(app);
 
-app.use(cors());
+app.use(
+    cors({
+        origin: "https://chat-08j1.onrender.com",
+        credentials: true,
+    })
+);
 app.use(bodyParser.json());
 app.use(
     cookieSession({
@@ -40,7 +45,7 @@ chatRoutes(app);
 if (process.env.NODE_ENV === "production") {
     const clientBuildPath = path.join(__dirname, "../client/build");
 
-    app.use(express.static("client/build", { maxAge: 86400000 * 30 }));
+    app.use(express.static(clientBuildPath, { maxAge: 86400000 * 30 }));
 
     app.get("*", (req, res) => {
         res.sendFile(path.join(clientBuildPath, "index.html"));
