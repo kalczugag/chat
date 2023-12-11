@@ -26,11 +26,7 @@ const ChatsList = () => {
         return <ChatsListItem key={chat._id} data={chat} />;
     });
 
-    return (
-        <div className="">
-            <div className="flex flex-col space-y-2">{renderedChats}</div>
-        </div>
-    );
+    return <div className="flex flex-col space-y-2">{renderedChats}</div>;
 };
 
 export default ChatsList;

@@ -38,6 +38,7 @@
         "nodemon": "^3.0.1",
         "passport": "^0.5.3",
         "passport-local": "^1.0.0",
+        "simplebar-react": "^3.2.4",
         "socket.io": "^4.7.2",
         "ts-node": "^10.9.1",
         "ts-node-dev": "^2.0.0"

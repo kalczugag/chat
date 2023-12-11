@@ -42,11 +42,11 @@ const ChatWindow = () => {
         <div className="flex flex-col w-full">
             <ChatHeader data="x" />
             <div
-                className={`flex flex-col justify-end space-y-5 overflow-y-auto bg-gradient-to-b from-transparent to-login-input text-white p-6 h-full rounded-md ${
+                className={`flex flex-col justify-end overflow-y-hidden bg-gradient-to-b from-transparent to-login-input text-white p-6 h-full rounded-md ${
                     isOpen && "hidden"
                 }`}
             >
-                <MessagesList />
+                <MessagesList chatId={chatId} />
                 <MsgContentInput
                     chatId={chatId}
                     socket={socket}

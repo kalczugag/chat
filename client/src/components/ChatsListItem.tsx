@@ -18,6 +18,11 @@ const ChatsListItem = ({ data }: TChatsListItemProps) => {
         dispatch(setChatWindow(false));
     };
 
+    const latestMessageShort =
+        latestMessage?.split("").length || 0 > 6
+            ? latestMessage
+            : latestMessage?.slice(0, 6) + "...";
+
     return (
         <Link
             className={`flex flex-row items-center space-x-6 ${activeClass} rounded-md p-4`}
@@ -39,7 +44,7 @@ const ChatsListItem = ({ data }: TChatsListItemProps) => {
             <div className="hidden flex-col font-semibold md:flex">
                 <h3 className="text-white">{chatName}</h3>
                 <p className="text-start text-sm text-gray-400">
-                    {latestMessage || "Say hello"}
+                    {latestMessageShort || "Say Hello"}
                 </p>
             </div>
         </Link>

@@ -9,7 +9,7 @@ const MessageBox = ({ data }: TMessageBox) => {
     const { user } = useUser();
 
     const imSender = (
-        <div className="flex flex-col items-end overflow-hidden">
+        <div className="flex flex-col items-end">
             <div className="flex-wrap max-w-xs break-all bg-blue-main rounded-2xl p-2 md:max-w-md xl:max-w-xl">
                 {data.content?.text}
             </div>

@@ -29,7 +29,7 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     });
 
     const handleSendMessage = () => {
-        if (inputValue) {
+        if (inputValue.content?.text) {
             if ("emit" in socket) {
                 if (chatData?.isGroupChat) {
                     socket.emit(

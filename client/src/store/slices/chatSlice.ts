@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchChats } from "../thunks/fetchChats";
+import { addMessage } from "./messagesSlice";
 import { IUser } from "../../../../models/User";
 
 export interface IChatState {
@@ -44,6 +45,17 @@ const chatSlice = createSlice({
         builder.addCase(fetchChats.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
+        });
+
+        builder.addCase(addMessage, (state, action) => {
+            const chatIndex = state.data?.findIndex(
+                (chat) => chat._id === action.payload.chatId
+            );
+
+            if (chatIndex !== undefined && chatIndex !== -1) {
+                state.data![chatIndex].latestMessage =
+                    action.payload.content.text;
+            }
         });
     },
 });
