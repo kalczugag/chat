@@ -11,7 +11,7 @@ const MessageBox = ({ data }: TMessageBox) => {
     const imSender = (
         <div className="flex flex-col items-end">
             <div className="flex-wrap max-w-xs break-all bg-blue-main rounded-2xl p-2 md:max-w-md xl:max-w-xl">
-                {data.content?.text}
+                {data.content}
             </div>
             <img
                 className="w-3 h-3 rounded-full border"
@@ -35,7 +35,7 @@ const MessageBox = ({ data }: TMessageBox) => {
                             adam
                         </p>
                         <div className="bg-login-input rounded-2xl p-2">
-                            {data.content?.text}
+                            {data.content}
                         </div>
                         <img
                             className="w-3 h-3 rounded-full border"

@@ -1,10 +1,16 @@
 import { Server as HttpServer } from "http";
 import { Server, Socket } from "socket.io";
-import { IMessage } from "../models/Message";
+import { Message } from "../models/Message";
 
 export default (httpServer: HttpServer) => {
     const io = new Server(httpServer);
     const userSocketMap = new Map<string, string>(); // Map to store user IDs and socket IDs
+    let chatId: string;
+
+    const saveMessageToDB = async (msg: any) => {
+        const newMessage = new Message(msg);
+        await newMessage.save();
+    };
 
     io.on("connection", (socket: Socket) => {
         //Messages types:
@@ -13,6 +19,7 @@ export default (httpServer: HttpServer) => {
 
         socket.on("join_group", (groupId: string) => {
             socket.join(`group/${groupId}`);
+            chatId = groupId;
         });
 
         socket.on("set_user_id", (userId: string) => {
@@ -20,16 +27,24 @@ export default (httpServer: HttpServer) => {
             userSocketMap.set(userId, socket.id);
         });
 
-        socket.on("send_msg", (msg: any, to: string) => {
+        socket.on("send_msg", async (msg: any, to: string) => {
             console.log(to);
             if (to.startsWith("group")) {
                 console.log(msg);
+                try {
+                    saveMessageToDB(msg);
+                } catch (err: unknown) {
+                    console.error("Error sending message: ", err);
+                }
+
                 socket.broadcast.to(to).emit("receive_msg", msg);
             } else {
                 const recipientSocketId = userSocketMap.get(to);
 
                 if (recipientSocketId) {
                     // Emit the private message to the specific recipient
+                    saveMessageToDB(msg);
+
                     io.to(recipientSocketId).emit(
                         "private_msg",
                         socket.id,

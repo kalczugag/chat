@@ -2,7 +2,6 @@ import { Express } from "express";
 import requireLogin from "../middlewares/requireLogin";
 import { Message, IMessage } from "../models/Message";
 import { Chat, IChat } from "../models/Chat";
-import { IUser } from "../models/User";
 
 type paginationFetch = {
     page?: number;
@@ -27,8 +26,7 @@ export default (app: Express) => {
 
     app.get("/api/chat/:chatId", requireLogin, async (req, res) => {
         const chatId = req.params.chatId;
-        const { page = 1, pageSize = 10 }: paginationFetch = req.query; // Default page is 1, default pageSize is 10
-
+        const { page = 1, pageSize = 3 }: paginationFetch = req.query; // Default page is 1, default pageSize is 10
         try {
             const messages = await Message.find(
                 {
@@ -75,20 +73,19 @@ export default (app: Express) => {
         const chatId = req.params.chatId;
         const messageBody: IMessage = req.body;
 
-        console.log(messageBody);
         try {
             const existingChat = await Chat.findOne({ _id: chatId });
 
-            if (existingChat) {
+            if (existingChat && chatId === messageBody.chatId) {
                 const newMessage = new Message(messageBody);
-
                 await newMessage.save();
-
                 return res.status(200).send(newMessage);
             }
         } catch (err) {
-            console.error("Error finding chat", err);
-            return res.status(404).send({ message: "No such chat" });
+            console.error("Error finding chat or invalid chatId", err);
+            return res
+                .status(404)
+                .send({ message: "No such chat or invalid chatId" });
         }
     });
 };

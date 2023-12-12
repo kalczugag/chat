@@ -15,9 +15,9 @@ type TMsgInput = {
 
 const defaultValues: IMsgData = {
     sender: "",
-    content: { text: "" },
+    content: "",
     chatId: "",
-    readBy: "",
+    readBy: [],
 };
 
 const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
@@ -29,7 +29,7 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     });
 
     const handleSendMessage = () => {
-        if (inputValue.content?.text) {
+        if (inputValue.content) {
             if ("emit" in socket) {
                 if (chatData?.isGroupChat) {
                     socket.emit(
@@ -52,9 +52,9 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setInputValue({
             sender: user?._id,
-            content: { text: event.target.value },
+            content: event.target.value,
             chatId,
-            readBy: user?._id,
+            readBy: [user?._id],
         });
     };
 
@@ -65,12 +65,12 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     };
 
     return (
-        <div className="flex flex-row  justify-between space-x-2">
+        <div className="flex flex-row justify-between space-x-2">
             <input
                 className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:outline-blue-main focus:shadow-xl"
                 placeholder="Aa"
                 type="text"
-                value={inputValue?.content?.text}
+                value={inputValue?.content}
                 onChange={handleInputChange}
                 onKeyDown={handleKeyPress}
             />
