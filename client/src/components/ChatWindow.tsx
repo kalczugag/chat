@@ -32,6 +32,7 @@ const ChatWindow = () => {
             socket.on("receive_msg", (msg: IMsgData) => {
                 handleAddMsgToState(msg);
             });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 
     const handleAddMsgToState = (msg: IMsgData) => {

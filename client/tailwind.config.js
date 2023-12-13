@@ -4,7 +4,11 @@ import colors from "tailwindcss/colors";
 module.exports = {
     content: ["./src/**/*.{js,jsx,ts,tsx}"],
     theme: {
-        extend: {},
+        extend: {
+            spacing: {
+                "sidebar-width": "360px",
+            },
+        },
         colors: {
             "login-bg": "#15161e",
             "login-input": "#373743",

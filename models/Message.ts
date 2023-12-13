@@ -4,7 +4,7 @@ export interface IMessage {
     sender?: Types.ObjectId;
     content?: string;
     chatId?: Types.ObjectId | string;
-    readBy: Types.ObjectId;
+    readBy?: Types.ObjectId;
 }
 
 const messageSchema = new Schema<IMessage>(

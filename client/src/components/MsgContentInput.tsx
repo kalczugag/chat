@@ -17,7 +17,6 @@ const defaultValues: IMsgData = {
     sender: "",
     content: "",
     chatId: "",
-    readBy: [],
 };
 
 const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
@@ -54,7 +53,6 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
             sender: user?._id,
             content: event.target.value,
             chatId,
-            readBy: [user?._id],
         });
     };
 

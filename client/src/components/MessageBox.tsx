@@ -32,7 +32,7 @@ const MessageBox = ({ data }: TMessageBox) => {
                     />
                     <div className="flex flex-col">
                         <p className="text-xs text-gray-400 font-semibold pl-2">
-                            adam
+                            {user?.username}
                         </p>
                         <div className="bg-login-input rounded-2xl p-2">
                             {data.content}

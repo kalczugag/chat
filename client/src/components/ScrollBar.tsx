@@ -1,4 +1,5 @@
 import { useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 type TScrollBarProps = {
     children: React.ReactNode;
@@ -7,12 +8,13 @@ type TScrollBarProps = {
 
 const ScrollBar = ({ children, className }: TScrollBarProps) => {
     const containerRef = useRef<HTMLDivElement>(null);
+    const location = useLocation();
 
     useEffect(() => {
-        if (containerRef.current) {
+        if (containerRef.current && !location.hash) {
             containerRef.current.scrollTop = containerRef.current.scrollHeight;
         }
-    }, [children]);
+    }, [children, location]);
 
     return (
         <div

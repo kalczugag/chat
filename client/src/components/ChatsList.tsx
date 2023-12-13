@@ -16,7 +16,7 @@ const ChatsList = () => {
             doFetchChats();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [data, doFetchChats]);
+    }, []);
 
     if (isLoading) {
         return <div>Loading...</div>;

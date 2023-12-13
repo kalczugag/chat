@@ -11,14 +11,12 @@ export interface IMsgData {
 
 interface IMessages {
     data: IMsgData[];
-    historyData: IMsgData[];
     isLoading: boolean;
     error: any;
 }
 
 const initialState: IMessages = {
     data: [],
-    historyData: [],
     isLoading: false,
     error: null,
 };
@@ -38,16 +36,15 @@ const messagesSlice = createSlice({
         builder.addCase(fetchMessages.fulfilled, (state, action) => {
             state.isLoading = false;
 
-            const newMessageIds = new Set(
-                action.payload.map((msg: IMsgData) => msg._id)
-            );
-
-            const uniqueMessages = action.payload.filter((msg: IMsgData) => {
-                return newMessageIds.has(msg._id);
-            });
-
-            // Update the state with the new concatenated array
-            state.data = [...state.data, ...uniqueMessages];
+            if (
+                action.meta.arg.page === 1 &&
+                action.payload.length > 0 &&
+                state.data.length === 0
+            ) {
+                state.data = action.payload;
+            } else {
+                state.data = state.data.concat(action.payload);
+            }
         });
 
         builder.addCase(fetchMessages.rejected, (state, action) => {

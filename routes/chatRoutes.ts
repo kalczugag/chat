@@ -26,7 +26,7 @@ export default (app: Express) => {
 
     app.get("/api/chat/:chatId", requireLogin, async (req, res) => {
         const chatId = req.params.chatId;
-        const { page = 1, pageSize = 3 }: paginationFetch = req.query; // Default page is 1, default pageSize is 10
+        const { page = 1, pageSize = 3 }: paginationFetch = req.query;
         try {
             const messages = await Message.find(
                 {
@@ -39,7 +39,9 @@ export default (app: Express) => {
                 .limit(pageSize)
                 .exec();
 
-            return res.status(200).send(messages);
+            const reversedMessages = messages.reverse();
+
+            return res.status(200).send(reversedMessages);
         } catch (err: unknown) {
             console.log("Error getting messages: ", err);
             return res.status(500).send("Internal Server Error");
