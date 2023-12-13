@@ -30,9 +30,9 @@ const MessageBox = ({ data }: TMessageBox) => {
                         src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
                         alt="user"
                     />
-                    <div className="flex flex-col">
-                        <p className="text-xs text-gray-400 font-semibold pl-2">
-                            {user?.username}
+                    <div className="relative flex flex-col">
+                        <p className="absolute -top-4 text-xs text-gray-400 font-semibold pl-2">
+                            {data.sender}
                         </p>
                         <div className="bg-login-input rounded-2xl p-2">
                             {data.content}
