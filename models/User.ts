@@ -11,12 +11,7 @@ export interface IUser {
 const userSchema = new Schema<IUser>({
     username: { type: "String", required: true },
     password: { type: "String", required: true },
-    pic: {
-        type: "String",
-        required: false,
-        default:
-            "https://icon-library.com/images/anonymous-avatar-icon/anonymous-avatar-icon-25.jpg",
-    },
+    pic: { type: "String", required: false },
     isAdmin: {
         type: Boolean,
         required: false,

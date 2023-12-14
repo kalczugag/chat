@@ -20,7 +20,7 @@ export default (app: Express) => {
             return res.status(200).send(userChats);
         } catch (err) {
             console.log("Error getting chats: ", err);
-            return res.status(500).send("Internal Server Error");
+            return res.status(500).send({ message: "Internal Server Error" });
         }
     });
 
@@ -44,7 +44,7 @@ export default (app: Express) => {
             return res.status(200).send(reversedMessages);
         } catch (err: unknown) {
             console.log("Error getting messages: ", err);
-            return res.status(500).send("Internal Server Error");
+            return res.status(500).send({ message: "Internal Server Error" });
         }
     });
 
