@@ -10,7 +10,7 @@ export default (app: Express) => {
         }
     });
 
-    app.get("api/user/:userId", requireLogin, async (req, res) => {
+    app.get("/api/user/:userId", requireLogin, async (req, res) => {
         const userId = req.params.userId;
 
         try {

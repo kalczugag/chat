@@ -47,7 +47,7 @@ const ChatWindow = () => {
                     isOpen && "hidden"
                 }`}
             >
-                <MessagesList chatId={chatId} />
+                <MessagesList userId={user?._id} chatId={chatId} />
                 <MsgContentInput
                     chatId={chatId}
                     socket={socket}

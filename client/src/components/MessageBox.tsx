@@ -1,12 +1,24 @@
 import { useUser } from "../hooks/use-user";
-import { IMsgData } from "../store";
+import { IMsgData, IUsers } from "../store";
+import NameToPic from "./NameToPic";
 
 type TMessageBox = {
+    // senderData: IUsers;
     data: IMsgData;
 };
 
 const MessageBox = ({ data }: TMessageBox) => {
     const { user } = useUser();
+
+    const isProfilePic = false ? (
+        <img
+            className="w-3 h-3 rounded-full border"
+            src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
+            alt="user"
+        />
+    ) : (
+        <NameToPic username={data.sender || ""} />
+    );
 
     const imSender = (
         <div className="flex flex-col items-end">
@@ -25,11 +37,7 @@ const MessageBox = ({ data }: TMessageBox) => {
         <>
             {user?._id !== data.sender ? (
                 <div className="flex flex-row items-center space-x-2">
-                    <img
-                        className="w-10 h-10 rounded-full border"
-                        src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
-                        alt="user"
-                    />
+                    {isProfilePic}
                     <div className="relative flex flex-col">
                         <p className="absolute -top-4 text-xs text-gray-400 font-semibold pl-2">
                             {data.sender}
