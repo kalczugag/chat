@@ -1,11 +1,11 @@
-import { IMsgData } from "../../store";
+import { IUsers } from "../../store";
 
-export const getUniqueIds = (msgs: IMsgData[], userId: string) => {
+export const getUniqueIds = (users: IUsers[], userId: string) => {
     const uniqueIds = new Set();
 
-    msgs.forEach((obj) => {
-        if (obj.sender !== userId) {
-            uniqueIds.add(obj.sender);
+    users.forEach((user) => {
+        if (user._id !== userId) {
+            uniqueIds.add(user._id);
         }
     });
 

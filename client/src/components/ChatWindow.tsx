@@ -20,24 +20,34 @@ const ChatWindow = () => {
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
     });
+    const messagesData = useSelector((state: RootState) => {
+        return state.messages.data.filter((msg) => {
+            return msg.chatId === chatData?._id;
+        });
+    });
 
     useEffect(() => {
         if (chatData?.isGroupChat && socket && "emit" in socket) {
             socket.emit("join_group", chatId);
         }
-    });
+    }, [chatData, chatId, socket]);
 
     useEffect(() => {
-        if (socket && "on" in socket)
+        if (socket && "on" in socket) {
             socket.on("receive_msg", (msg: IMsgData) => {
                 handleAddMsgToState(msg);
             });
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);
 
     const handleAddMsgToState = (msg: IMsgData) => {
         dispatch(addMessage(msg));
     };
+
+    if (!chatData || !user || !messagesData) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="flex flex-col w-full">
@@ -47,7 +57,11 @@ const ChatWindow = () => {
                     isOpen && "hidden"
                 }`}
             >
-                <MessagesList userId={user?._id} chatId={chatId} />
+                <MessagesList
+                    userId={user._id}
+                    chatData={chatData}
+                    messagesData={messagesData}
+                />
                 <MsgContentInput
                     chatId={chatId}
                     socket={socket}

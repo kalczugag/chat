@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchChats } from "../thunks/fetchChats";
 import { addMessage } from "./messagesSlice";
-import { IUser } from "../../../../models/User";
+import { IUsers } from "./usersSlice";
 
 export interface IChatState {
     _id: string;
     chatName: string;
     isGroupChat: boolean;
-    users: IUser[];
+    users: IUsers[];
     latestMessage?: string;
     groupAdmin?: string;
 }

@@ -7,9 +7,7 @@ import ChatsListItem from "./ChatsListItem";
 
 const ChatsList = () => {
     const [doFetchChats, fetchingChats] = useThunk(fetchChats);
-    const { data, isLoading }: TChatState = useSelector(
-        (state: RootState) => state.chat
-    );
+    const { data }: TChatState = useSelector((state: RootState) => state.chat);
 
     useEffect(() => {
         if (!data && !fetchingChats) {
@@ -18,7 +16,7 @@ const ChatsList = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    if (isLoading) {
+    if (!data && fetchingChats) {
         return <div>Loading...</div>;
     }
 

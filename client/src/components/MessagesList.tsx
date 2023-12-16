@@ -1,48 +1,58 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState, fetchMessages, fetchSelectedUser } from "../store";
+import { fetchMessages, IChatState, IMsgData } from "../store";
 import { useThunk } from "../hooks/use-thunk";
-import { getUniqueIds } from "../utils/functions/getUniqueUserIds";
 import MessageBox from "./MessageBox";
 import ScrollBar from "./ScrollBar";
 
 type TMessagesListProps = {
-    chatId?: string;
-    userId?: string;
+    chatData: IChatState;
+    messagesData: IMsgData[];
+    userId: string;
 };
 
-const MessagesList = ({ chatId, userId }: TMessagesListProps) => {
+const MessagesList = ({
+    userId,
+    chatData,
+    messagesData,
+}: TMessagesListProps) => {
     const [page, setPage] = useState<number>(1);
     const [doFetchMessages, isLoading] = useThunk(fetchMessages);
-    const [doFetchUserById] = useThunk(fetchSelectedUser);
-    const data = useSelector((state: RootState) => {
-        return state.messages.data.filter((msg) => {
-            return msg.chatId === chatId;
-        });
-    });
 
-    const usersIds = getUniqueIds(data, userId!);
+    const PAGINATION_FETCH_SETTINGS = {
+        chatId: chatData?._id,
+        page,
+        pageSize: 10,
+    };
 
     useEffect(() => {
-        if (chatId && (!data || data.length === 0) && !isLoading) {
-            doFetchMessages({ chatId, page, pageSize: 10 });
+        if (
+            chatData?._id &&
+            (!messagesData || messagesData.length === 0) &&
+            !isLoading
+        ) {
+            doFetchMessages(PAGINATION_FETCH_SETTINGS);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chatId, page]);
+    }, [chatData?._id, page]);
 
     useEffect(() => {
-        usersIds.map((id) => {
-            return doFetchUserById(id);
-        });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [doFetchUserById]);
+        console.log(chatData?.users.length);
+    }, [chatData]);
 
-    const renderedMessageBoxes = data.map((msg, index) => {
+    const handleLoadMoreMessages = () => {
+        setPage(page + 1);
+        doFetchMessages(PAGINATION_FETCH_SETTINGS);
+    };
+
+    const renderedMessageBoxes = messagesData.map((msg, index) => {
         return <MessageBox key={index} data={msg} />;
     });
 
     return (
-        <ScrollBar className="mb-5 space-y-5">{renderedMessageBoxes}</ScrollBar>
+        <ScrollBar className="mb-5 space-y-5">
+            <button onClick={handleLoadMoreMessages}>Load more</button>
+            {renderedMessageBoxes}
+        </ScrollBar>
     );
 };
 
