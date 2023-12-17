@@ -18,6 +18,10 @@ const ChatsListItem = ({ data }: TChatsListItemProps) => {
         dispatch(setChatWindow(false));
     };
 
+    if (!latestMessage) {
+        return <div>Loading...</div>;
+    }
+
     const latestMessageShort =
         latestMessage?.split("").length || 0 > 6
             ? latestMessage
@@ -30,6 +34,7 @@ const ChatsListItem = ({ data }: TChatsListItemProps) => {
             onClick={handleOpenChat}
         >
             <div className="relative">
+                {/* to change ↓ */}
                 <img
                     className="w-10 h-10 rounded-full border"
                     src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
@@ -44,7 +49,7 @@ const ChatsListItem = ({ data }: TChatsListItemProps) => {
             <div className="hidden flex-col font-semibold md:flex">
                 <h3 className="text-white">{chatName}</h3>
                 <p className="text-start text-sm text-gray-400">
-                    {latestMessageShort || "Say Hello"}
+                    {latestMessageShort}
                 </p>
             </div>
         </Link>

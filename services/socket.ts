@@ -1,6 +1,7 @@
 import { Server as HttpServer } from "http";
 import { Server, Socket } from "socket.io";
 import { Message } from "../models/Message";
+import { Chat } from "../models/Chat";
 
 export default (httpServer: HttpServer) => {
     const io = new Server(httpServer);
@@ -28,9 +29,7 @@ export default (httpServer: HttpServer) => {
         });
 
         socket.on("send_msg", async (msg: any, to: string) => {
-            console.log(to);
             if (to.startsWith("group")) {
-                console.log(msg);
                 try {
                     saveMessageToDB(msg);
                 } catch (err: unknown) {

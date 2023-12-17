@@ -73,18 +73,29 @@ export default (app: Express) => {
 
     app.post("/api/chat/:chatId", requireLogin, async (req, res) => {
         const chatId = req.params.chatId;
-        const messageBody: IMessage = req.body;
+        const messageBody = req.body;
 
         try {
             const existingChat = await Chat.findOne({ _id: chatId });
 
             if (existingChat && chatId === messageBody.chatId) {
+                const updatedChat = await Chat.findByIdAndUpdate(
+                    chatId,
+                    {
+                        $set: {
+                            latestMessage: messageBody.content,
+                        },
+                    },
+                    { new: true }
+                );
+
                 const newMessage = new Message(messageBody);
                 await newMessage.save();
-                return res.status(200).send(newMessage);
+
+                return res.status(200).send({ newMessage, updatedChat });
             }
         } catch (err) {
-            console.error("Error finding chat or invalid chatId", err);
+            console.error("Error finding chat or invalid chatId ", err);
             return res
                 .status(404)
                 .send({ message: "No such chat or invalid chatId" });
