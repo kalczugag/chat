@@ -9,6 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoadingPage from "./pages/LoadingPage";
 import ChatWindow from "./components/ChatWindow";
+import NewChatForm from "./components/NewChatForm";
 
 const App = () => {
     const dispatch = useDispatch();
@@ -47,6 +48,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<DashboardPage />}>
                     <Route path="/chats/:chatId" element={<ChatWindow />} />
+                    <Route path="/new" element={<NewChatForm />} />
                 </Route>
                 <Route path="/login" element={<LoginPage />} />
             </Routes>

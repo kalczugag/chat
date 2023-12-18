@@ -43,7 +43,7 @@ const messagesSlice = createSlice({
             ) {
                 state.data = action.payload;
             } else {
-                state.data = state.data.concat(action.payload);
+                state.data = action.payload.concat(state.data);
             }
         });
 

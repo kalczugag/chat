@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { fetchMessages, IChatState, IMsgData } from "../store";
 import { useThunk } from "../hooks/use-thunk";
 import MessageBox from "./MessageBox";
@@ -35,9 +35,9 @@ const MessagesList = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatData?._id, page]);
 
-    useEffect(() => {
-        console.log(chatData?.users.length);
-    }, [chatData]);
+    // useEffect(() => {
+    //     console.log(chatData?.users.length);
+    // }, [chatData]);
 
     const handleLoadMoreMessages = () => {
         setPage(page + 1);
@@ -50,7 +50,14 @@ const MessagesList = ({
 
     return (
         <ScrollBar className="mb-5 space-y-5">
-            <button onClick={handleLoadMoreMessages}>Load more</button>
+            <div className="flex justify-center">
+                <button
+                    className="font-semibold border rounded-xl px-2 bg-blue hover:bg-login-bg"
+                    onClick={handleLoadMoreMessages}
+                >
+                    Load more
+                </button>
+            </div>
             {renderedMessageBoxes}
         </ScrollBar>
     );

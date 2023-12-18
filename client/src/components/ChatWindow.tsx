@@ -15,7 +15,6 @@ const ChatWindow = () => {
     const socket = useSocket();
     const { chatId } = useParams();
     const { user } = useUser();
-
     const { isOpen } = useSelector((state: RootState) => state.chat);
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { RootState, IChatState } from "../store";
+import { Form, Field } from "react-final-form";
 import { Socket } from "socket.io-client";
+import { RootState } from "../store";
 import { useUser } from "../hooks/use-user";
 import { IoMdArrowDropup } from "react-icons/io";
 import { IMsgData } from "../store/slices/messagesSlice";
@@ -13,72 +14,71 @@ type TMsgInput = {
     addMsgFn: (msg: IMsgData) => void;
 };
 
-const defaultValues: IMsgData = {
-    sender: "",
-    content: "",
-    chatId: "",
+type TFormValues = {
+    content: string;
 };
 
 const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
     const { user } = useUser();
-    const [inputValue, setInputValue] = useState<IMsgData>(defaultValues);
 
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
     });
 
-    const handleSendMessage = () => {
-        if (inputValue.content) {
+    const handleSendMessage = (value: TFormValues) => {
+        const messageObj: IMsgData = {
+            sender: user?._id,
+            content: value.content,
+            chatId,
+        };
+
+        console.log(messageObj);
+
+        if (messageObj.content) {
             if ("emit" in socket) {
                 if (chatData?.isGroupChat) {
                     socket.emit(
                         "send_msg",
-                        inputValue,
+                        messageObj,
                         `group/${chatData?._id}`
                     );
                 } else {
-                    socket.emit("send_msg", inputValue, `priv/${chatData}`);
+                    socket.emit("send_msg", messageObj, `priv/${chatData}`);
                 }
 
-                addMsgFn(inputValue);
-                setInputValue(defaultValues);
+                addMsgFn(messageObj);
             }
         } else {
             console.error("Value can't be empty");
         }
     };
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setInputValue({
-            sender: user?._id,
-            content: event.target.value,
-            chatId,
-        });
-    };
-
-    const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === "Enter") {
-            handleSendMessage();
-        }
-    };
+    const required = (value: TFormValues) => (value ? undefined : "Required");
 
     return (
-        <div className="flex flex-row justify-between space-x-2">
-            <input
-                className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:outline-blue-main focus:shadow-xl"
-                placeholder="Aa"
-                type="text"
-                value={inputValue?.content}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyPress}
-            />
-            <button
-                className="bg-blue-main rounded-md p-3 text-xl"
-                onClick={handleSendMessage}
-            >
-                <IoMdArrowDropup />
-            </button>
-        </div>
+        <Form
+            onSubmit={handleSendMessage}
+            render={({ handleSubmit, form }) => (
+                <form
+                    onSubmit={(event) => {
+                        handleSubmit(event);
+                        form.reset();
+                    }}
+                    className="flex flex-row justify-between space-x-2"
+                >
+                    <Field
+                        name="content"
+                        component="input"
+                        validate={required}
+                        className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:outline-blue-main focus:shadow-xl"
+                    />
+
+                    <button className="bg-blue-main rounded-md p-3 text-xl">
+                        <IoMdArrowDropup />
+                    </button>
+                </form>
+            )}
+        />
     );
 };
 
