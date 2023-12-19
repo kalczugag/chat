@@ -26,6 +26,7 @@ const authSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(fetchUser.pending, (state, action) => {
             state.isLoading = true;
+            state.error = null;
         });
         builder.addCase(fetchUser.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -38,6 +39,7 @@ const authSlice = createSlice({
 
         builder.addCase(handleSignUser.pending, (state, action) => {
             state.isLoading = true;
+            state.error = null;
         });
         builder.addCase(handleSignUser.fulfilled, (state, action) => {
             state.isLoading = false;

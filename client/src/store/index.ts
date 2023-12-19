@@ -28,4 +28,5 @@ export * from "./thunks/fetchUser";
 export * from "./thunks/fetchSelectedUser";
 export * from "./thunks/fetchChats";
 export * from "./thunks/fetchMessages";
+export * from "./thunks/addMessageToDB";
 export * from "./thunks/handleSignUser";

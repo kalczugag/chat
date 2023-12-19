@@ -8,9 +8,28 @@ export default (httpServer: HttpServer) => {
     const userSocketMap = new Map<string, string>(); // Map to store user IDs and socket IDs
     let chatId: string;
 
-    const saveMessageToDB = async (msg: any) => {
-        const newMessage = new Message(msg);
-        await newMessage.save();
+    const saveMessageToDB = async (
+        msg: any
+    ): Promise<{ success: boolean; error?: string }> => {
+        try {
+            const newMessage = new Message(msg);
+            await newMessage.save();
+
+            await Chat.findByIdAndUpdate(
+                chatId,
+                {
+                    $set: {
+                        latestMessage: msg.content,
+                    },
+                },
+                { new: true }
+            );
+
+            return { success: true };
+        } catch (err: unknown) {
+            console.error("Error saving message: ", err);
+            return { success: false, error: "Error saving message" };
+        }
     };
 
     io.on("connection", (socket: Socket) => {
@@ -30,20 +49,12 @@ export default (httpServer: HttpServer) => {
 
         socket.on("send_msg", async (msg: any, to: string) => {
             if (to.startsWith("group")) {
-                try {
-                    saveMessageToDB(msg);
-                } catch (err: unknown) {
-                    console.error("Error sending message: ", err);
-                }
-
                 socket.broadcast.to(to).emit("receive_msg", msg);
             } else {
                 const recipientSocketId = userSocketMap.get(to);
 
                 if (recipientSocketId) {
                     // Emit the private message to the specific recipient
-                    saveMessageToDB(msg);
-
                     io.to(recipientSocketId).emit(
                         "private_msg",
                         socket.id,

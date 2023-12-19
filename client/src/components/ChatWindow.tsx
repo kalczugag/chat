@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { RootState } from "../store";
+import { RootState, addMessageToDB, addMessage, IMsgData } from "../store";
 import { useSocket } from "../hooks/use-socket";
 import { useUser } from "../hooks/use-user";
+import { useThunk } from "../hooks/use-thunk";
 import { findChatById } from "../utils/functions/findChatById";
-import { IMsgData, addMessage } from "../store/slices/messagesSlice";
 import ChatHeader from "./ChatHeader";
 import MsgContentInput from "./MsgContentInput";
 import MessagesList from "./MessagesList";
@@ -15,6 +15,7 @@ const ChatWindow = () => {
     const socket = useSocket();
     const { chatId } = useParams();
     const { user } = useUser();
+    const [doAddMsg, isAddingMsg] = useThunk(addMessageToDB);
     const { isOpen } = useSelector((state: RootState) => state.chat);
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
@@ -42,6 +43,7 @@ const ChatWindow = () => {
 
     const handleAddMsgToState = (msg: IMsgData) => {
         dispatch(addMessage(msg));
+        doAddMsg(msg);
     };
 
     if (!chatData || !user || !messagesData) {
@@ -64,6 +66,7 @@ const ChatWindow = () => {
                 <MsgContentInput
                     chatId={chatId}
                     socket={socket}
+                    isLoading={isAddingMsg}
                     addMsgFn={handleAddMsgToState}
                 />
             </div>

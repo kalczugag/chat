@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchMessages } from "../thunks/fetchMessages";
+import { addMessageToDB } from "../thunks/addMessageToDB";
 
 export interface IMsgData {
     _id?: string;
@@ -32,6 +33,7 @@ const messagesSlice = createSlice({
     extraReducers(builder) {
         builder.addCase(fetchMessages.pending, (state, action) => {
             state.isLoading = true;
+            state.error = null;
         });
         builder.addCase(fetchMessages.fulfilled, (state, action) => {
             state.isLoading = false;
@@ -50,6 +52,17 @@ const messagesSlice = createSlice({
         builder.addCase(fetchMessages.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
+        });
+
+        builder.addCase(addMessageToDB.pending, (state, action) => {
+            state.isLoading = true;
+            state.error = null;
+        });
+        builder.addCase(addMessageToDB.fulfilled, (state, action) => {
+            state.isLoading = false;
+        });
+        builder.addCase(addMessageToDB.rejected, (state, action) => {
+            state.isLoading = false;
         });
     },
 });

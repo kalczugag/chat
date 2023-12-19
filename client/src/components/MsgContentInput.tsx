@@ -11,6 +11,7 @@ import { findChatById } from "../utils/functions/findChatById";
 type TMsgInput = {
     socket: Socket;
     chatId?: string;
+    isLoading: boolean;
     addMsgFn: (msg: IMsgData) => void;
 };
 
@@ -18,7 +19,12 @@ type TFormValues = {
     content: string;
 };
 
-const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
+const MsgContentInput = ({
+    socket,
+    chatId,
+    isLoading,
+    addMsgFn,
+}: TMsgInput) => {
     const { user } = useUser();
 
     const chatData = useSelector((state: RootState) => {
@@ -31,8 +37,6 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
             content: value.content,
             chatId,
         };
-
-        console.log(messageObj);
 
         if (messageObj.content) {
             if ("emit" in socket) {
@@ -73,8 +77,11 @@ const MsgContentInput = ({ socket, chatId, addMsgFn }: TMsgInput) => {
                         className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:outline-blue-main focus:shadow-xl"
                     />
 
-                    <button className="bg-blue-main rounded-md p-3 text-xl">
-                        <IoMdArrowDropup />
+                    <button
+                        disabled={isLoading}
+                        className="bg-blue-main rounded-md h-12 w-12 p-3 text-xl"
+                    >
+                        {isLoading ? "..." : <IoMdArrowDropup />}
                     </button>
                 </form>
             )}

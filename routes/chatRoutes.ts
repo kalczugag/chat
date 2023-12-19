@@ -79,7 +79,7 @@ export default (app: Express) => {
             const existingChat = await Chat.findOne({ _id: chatId });
 
             if (existingChat && chatId === messageBody.chatId) {
-                const updatedChat = await Chat.findByIdAndUpdate(
+                await Chat.findByIdAndUpdate(
                     chatId,
                     {
                         $set: {
@@ -92,7 +92,7 @@ export default (app: Express) => {
                 const newMessage = new Message(messageBody);
                 await newMessage.save();
 
-                return res.status(200).send({ newMessage, updatedChat });
+                return res.status(200).send(newMessage);
             }
         } catch (err) {
             console.error("Error finding chat or invalid chatId ", err);

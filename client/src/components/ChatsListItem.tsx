@@ -18,10 +18,6 @@ const ChatsListItem = ({ data }: TChatsListItemProps) => {
         dispatch(setChatWindow(false));
     };
 
-    if (!latestMessage) {
-        return <div>Loading...</div>;
-    }
-
     const latestMessageShort =
         latestMessage?.split("").length || 0 > 6
             ? latestMessage

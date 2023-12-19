@@ -5,7 +5,7 @@ export interface IChat {
     chatName: string;
     isGroupChat: boolean;
     users: Types.ObjectId[];
-    latestMessage: string;
+    latestMessage?: string;
     groupAdmin?: Types.ObjectId;
 }
 
@@ -17,6 +17,7 @@ const chatSchema = new Schema<IChat>(
         latestMessage: {
             type: String,
             default: "Say Hello",
+            required: false,
         },
         groupAdmin: { type: Schema.Types.ObjectId, ref: "User" },
     },
