@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import { Form, Field } from "react-final-form";
 import { Socket } from "socket.io-client";
@@ -79,7 +78,7 @@ const MsgContentInput = ({
 
                     <button
                         disabled={isLoading}
-                        className="bg-blue-main rounded-md h-12 w-12 p-3 text-xl"
+                        className="flex items-center justify-center bg-blue-main rounded-md w-12 h-12 p-3 text-xl"
                     >
                         {isLoading ? "..." : <IoMdArrowDropup />}
                     </button>
