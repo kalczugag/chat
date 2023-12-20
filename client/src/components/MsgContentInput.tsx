@@ -73,7 +73,7 @@ const MsgContentInput = ({
                         name="content"
                         component="input"
                         validate={required}
-                        className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:outline-blue-main focus:shadow-xl"
+                        className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:border-blue-main focus:shadow-xl"
                     />
 
                     <button

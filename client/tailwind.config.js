@@ -7,6 +7,7 @@ module.exports = {
         extend: {
             spacing: {
                 "sidebar-width": "360px",
+                "50px": "50px",
             },
         },
         colors: {
