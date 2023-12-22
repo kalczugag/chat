@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { createSelector } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
 import { RootState, addMessageToDB, addMessage, IMsgData } from "../store";
 import { useSocket } from "../hooks/use-socket";
@@ -20,11 +21,17 @@ const ChatWindow = () => {
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
     });
-    const messagesData = useSelector((state: RootState) => {
-        return state.messages.data.filter((msg) => {
-            return msg.chatId === chatData?._id;
-        });
-    });
+
+    const getMessagesData = (state: RootState) => state.messages.data;
+    const selectFilteredMessages = createSelector(
+        [getMessagesData],
+        (messagesData: IMsgData[]) => {
+            return messagesData.filter((msg) => msg.chatId === chatId);
+        }
+    );
+    const filteredMessages = useSelector((state: RootState) =>
+        selectFilteredMessages(state)
+    );
 
     useEffect(() => {
         if (chatData?.isGroupChat && socket && "emit" in socket) {
@@ -46,7 +53,7 @@ const ChatWindow = () => {
         doAddMsg(msg);
     };
 
-    if (!chatData || !user || !messagesData) {
+    if (!chatData || !user || !filteredMessages) {
         return <div>Loading...</div>;
     }
 
@@ -61,7 +68,7 @@ const ChatWindow = () => {
                 <MessagesList
                     userId={user._id}
                     chatData={chatData}
-                    messagesData={messagesData}
+                    messagesData={filteredMessages}
                 />
                 <MsgContentInput
                     chatId={chatId}

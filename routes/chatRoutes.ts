@@ -10,9 +10,9 @@ type paginationFetch = {
 
 export default (app: Express) => {
     app.get("/api/chat", requireLogin, async (req, res) => {
-        const user = req.user;
-
         try {
+            const user = req.user;
+
             const userChats = await Chat.find({
                 users: user,
             });
@@ -25,9 +25,10 @@ export default (app: Express) => {
     });
 
     app.get("/api/chat/:chatId", requireLogin, async (req, res) => {
-        const chatId = req.params.chatId;
-        const { page = 1, pageSize = 3 }: paginationFetch = req.query;
         try {
+            const chatId = req.params.chatId;
+            const { page = 1, pageSize = 10 }: paginationFetch = req.query;
+
             const messages = await Message.find(
                 {
                     chatId,
@@ -49,9 +50,9 @@ export default (app: Express) => {
     });
 
     app.post("/api/chat", requireLogin, async (req, res) => {
-        const chatBody: IChat = req.body;
-
         try {
+            const chatBody: IChat = req.body;
+
             if (
                 !chatBody.isGroupChat ||
                 !chatBody.users ||
@@ -72,10 +73,10 @@ export default (app: Express) => {
     });
 
     app.post("/api/chat/:chatId", requireLogin, async (req, res) => {
-        const chatId = req.params.chatId;
-        const messageBody = req.body;
-
         try {
+            const chatId = req.params.chatId;
+            const messageBody = req.body;
+
             const existingChat = await Chat.findOne({ _id: chatId });
 
             if (existingChat && chatId === messageBody.chatId) {

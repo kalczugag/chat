@@ -13,7 +13,7 @@ import "./models/User";
 import "./models/Message";
 import "./services/passport";
 
-mongoose.connect(keys.mongoURI!);
+mongoose.connect(keys.mongoURI);
 
 const app = express();
 const httpServer = createServer(app);
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [keys.cookieKey!],
+        keys: [keys.cookieKey],
     })
 );
 app.use(passport.initialize());
@@ -45,7 +45,9 @@ chatRoutes(app);
 if (process.env.NODE_ENV === "production") {
     const clientBuildPath = path.join(__dirname, "../client/build");
 
-    app.use(express.static(clientBuildPath, { maxAge: 86400000 * 30 }));
+    app.use(
+        express.static(clientBuildPath, { maxAge: 30 * 24 * 60 * 60 * 1000 })
+    );
 
     app.get("*", (req, res) => {
         res.sendFile(path.join(clientBuildPath, "index.html"));

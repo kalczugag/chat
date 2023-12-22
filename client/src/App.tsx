@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useThunk } from "./hooks/use-thunk";
 import { useUser } from "./hooks/use-user";
@@ -12,16 +12,25 @@ import ChatWindow from "./components/ChatWindow";
 import NewChatForm from "./components/NewChatForm";
 
 const App = () => {
+    const location = useLocation();
     const dispatch = useDispatch();
-    const [doFetchUser, isLoadingUser] = useThunk(fetchUser);
+    const [doFetchUser, isLoadingUser, userError] = useThunk(fetchUser);
     const { user } = useUser();
 
     useEffect(() => {
-        if (!user && !isLoadingUser) {
+        if (!user && !isLoadingUser && !userError) {
             doFetchUser();
         }
+
+        if (location.pathname === "/" && userError) {
+            console.error(
+                "Failed to get the current logged in user: ",
+                userError
+            );
+            window.location.href = "/login";
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [doFetchUser, user]);
+    }, [doFetchUser, user, userError]);
 
     useEffect(() => {
         const serverURI =
@@ -51,6 +60,7 @@ const App = () => {
                     <Route path="/new" element={<NewChatForm />} />
                 </Route>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<LoginPage />} />
             </Routes>
         </div>
     );

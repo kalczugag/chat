@@ -1,9 +1,8 @@
 import { useUser } from "../hooks/use-user";
-import { IMsgData, IUsers } from "../store";
+import { IMsgData } from "../store";
 import NameToPic from "./NameToPic";
 
 type TMessageBox = {
-    // senderData: IUsers;
     data: IMsgData;
 };
 

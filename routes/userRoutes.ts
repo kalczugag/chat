@@ -1,5 +1,7 @@
 import { Express } from "express";
+import session from "express-session";
 import passport from "passport";
+import keys from "../config/keys";
 import requireLogin from "../middlewares/requireLogin";
 import { User } from "../models/User";
 
@@ -11,9 +13,9 @@ export default (app: Express) => {
     });
 
     app.get("/api/user/:userId", requireLogin, async (req, res) => {
-        const userId = req.params.userId;
-
         try {
+            const userId = req.params.userId;
+
             const user = await User.findById(userId);
 
             res.status(200).send(user);
@@ -27,11 +29,15 @@ export default (app: Express) => {
     });
 
     app.get("/api/auth/logout", (req, res, next) => {
-        req.logout((err: unknown) => {
-            if (err) {
-                return next(err);
-            }
-            res.redirect("/");
+        res.clearCookie("session");
+        res.clearCookie("session.sig");
+
+        session({
+            secret: keys.cookieKey,
+            resave: false,
+            saveUninitialized: true,
+        })(req, res, () => {
+            res.status(200).redirect("/login");
         });
     });
 

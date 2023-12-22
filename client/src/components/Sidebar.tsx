@@ -1,9 +1,20 @@
-import { MdOpenInNew } from "react-icons/md";
+import { MdOpenInNew, MdLogout } from "react-icons/md";
 import { isMobile } from "react-device-detect";
 import { Link } from "react-router-dom";
 import ChatsList from "./ChatsList";
+import axios from "axios";
 
 const Sidebar = () => {
+    const handleLogout = async () => {
+        try {
+            const response = axios.post("/api/auth/logout");
+
+            console.log(response);
+        } catch (err: unknown) {
+            console.error(err);
+        }
+    };
+
     return (
         <div
             className={`flex flex-col ${
@@ -15,6 +26,9 @@ const Sidebar = () => {
                 <Link to="/new" className="text-xl hover:text-blue-main">
                     <MdOpenInNew />
                 </Link>
+                <a href="/api/auth/logout">
+                    <MdLogout />
+                </a>
             </div>
             <ChatsList />
         </div>
