@@ -5,16 +5,6 @@ import ChatsList from "./ChatsList";
 import axios from "axios";
 
 const Sidebar = () => {
-    const handleLogout = async () => {
-        try {
-            const response = axios.post("/api/auth/logout");
-
-            console.log(response);
-        } catch (err: unknown) {
-            console.error(err);
-        }
-    };
-
     return (
         <div
             className={`flex flex-col ${

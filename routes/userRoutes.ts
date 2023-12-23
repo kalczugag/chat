@@ -20,7 +20,19 @@ export default (app: Express) => {
 
             res.status(200).send(user);
         } catch (err: unknown) {
+            console.error(err);
             res.status(500).send({ message: "No user found" });
+        }
+    });
+
+    app.get("/api/users", requireLogin, async (req, res) => {
+        try {
+            const { match } = req.params;
+
+            console.log(match);
+        } catch (err: unknown) {
+            console.error(err);
+            res.status(500).send({ message: "No users found" });
         }
     });
 
