@@ -27,12 +27,25 @@ export default (app: Express) => {
 
     app.get("/api/users", requireLogin, async (req, res) => {
         try {
-            const { match } = req.params;
+            const { match } = req.query;
+            const userId = req.user?._id;
 
-            console.log(match);
-        } catch (err: unknown) {
+            const users = await User.find(
+                {
+                    username: new RegExp(`^${match}`, "i"),
+                    _id: { $ne: userId },
+                },
+                "username _id"
+            );
+
+            if (users.length > 0) {
+                res.status(200).send(users);
+            } else {
+                res.status(404).send({ message: "No users found" });
+            }
+        } catch (err) {
             console.error(err);
-            res.status(500).send({ message: "No users found" });
+            res.status(500).send({ message: "Internal Server Error" });
         }
     });
 

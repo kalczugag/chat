@@ -1,11 +1,17 @@
 import mongoose, { Schema } from "mongoose";
 
 export interface IUser {
-    _id?: string;
+    _id: string;
     username: string;
     password: string;
     pic?: string;
     isAdmin?: boolean;
+}
+
+declare global {
+    namespace Express {
+        interface User extends IUser {}
+    }
 }
 
 const userSchema = new Schema<IUser>({

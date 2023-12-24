@@ -60,10 +60,17 @@ const NewChatForm = () => {
                         }}
                         className="flex flex-row justify-center items-center space-x-2 p-6 rounded-md"
                     >
-                        <div className="relative flex flex-row justify-between p-2 border w-full border-gray-500 shadow-md rounded-md outline-none bg-transparent focus-within:border-blue-main focus-within:shadow-xl">
+                        <div className="flex flex-row justify-between p-2 border w-full border-gray-500 shadow-md rounded-md outline-none bg-transparent focus-within:border-blue-main focus-within:shadow-xl">
                             <div className="flex flex-wrap justify-start w-full">
-                                <ul className="flex flex-wrap">
+                                <ul className="relative flex flex-wrap">
                                     {renderedUsersTags}
+                                    {isOpenList && (
+                                        <NewChatUsersList
+                                            newUser={
+                                                getState().values.name || ""
+                                            }
+                                        />
+                                    )}
                                 </ul>
                                 <Field
                                     name="name"
@@ -86,7 +93,10 @@ const NewChatForm = () => {
                                 </button>
                                 <button
                                     type="button"
-                                    onClick={handleClearUsers}
+                                    onClick={() => {
+                                        handleClearUsers();
+                                        form.reset();
+                                    }}
                                 >
                                     <IoCloseSharp />
                                 </button>
@@ -98,7 +108,6 @@ const NewChatForm = () => {
                     </form>
                 )}
             />
-            {isOpenList && <NewChatUsersList />}
         </div>
     );
 };
