@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { isMobile } from "react-device-detect";
 
 type TScrollBarProps = {
     children: React.ReactNode;
@@ -19,7 +20,9 @@ const ScrollBar = ({ children, className }: TScrollBarProps) => {
     return (
         <div
             ref={containerRef}
-            className={`overflow-y-hidden ${className} hover:overflow-y-auto`}
+            className={`overflow-y-hidden ${className} ${
+                isMobile ? "overflow-y-auto" : "hover:overflow-y-auto"
+            }`}
         >
             {children}
         </div>

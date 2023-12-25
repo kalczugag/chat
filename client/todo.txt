@@ -1,2 +1,1 @@
-1. add chat form
-2. get username from chatData.users[] (because now there are only ids)
+1. navigate through users list by arrow up and down

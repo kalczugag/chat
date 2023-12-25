@@ -2,20 +2,34 @@ import { useState } from "react";
 import { Form, Field } from "react-final-form";
 import { IoAddOutline, IoCloseSharp } from "react-icons/io5";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { RootState } from "../store";
 import NewChatUsersList from "./NewChatUsersList";
 
-type FormValues = {
-    name?: string;
+export type FormValues = {
+    username: string;
 };
 
 const NewChatForm = () => {
     const [users, setUsers] = useState<any[]>([]);
     const [isOpenList, setIsOpenList] = useState<boolean>(false);
+    const data = useSelector((state: RootState) => state.users.matchedData);
 
-    const handleSubmit = (values: FormValues) => {
-        if (values.name) {
-            setUsers((curr) => [...curr, values.name]);
+    if (!data) {
+        return <div>Loading...</div>;
+    }
+
+    const handleAddUser = (values: FormValues) => {
+        const userExists = users.some((user) => user === values.username);
+
+        if (values.username && !userExists) {
+            setUsers((curr) => [...curr, values.username]);
+            setIsOpenList(false);
         }
+    };
+
+    const handleSubmit = () => {
+        console.log(users);
     };
 
     const handleRemoveUser = (userIndex: number) => {
@@ -27,7 +41,15 @@ const NewChatForm = () => {
     };
 
     const handleOpenList = () => {
-        setIsOpenList(!isOpenList);
+        if (data.length > 0) setIsOpenList(!isOpenList);
+    };
+
+    const handleOpenListByValue = (value: string) => {
+        if (value.trim().length > 0) {
+            setIsOpenList(true);
+        } else {
+            setIsOpenList(false);
+        }
     };
 
     const renderedUsersTags = users.map((user, index) => {
@@ -52,60 +74,82 @@ const NewChatForm = () => {
         <div className="w-full h-full bg-gradient-to-b from-transparent to-login-input text-white rounded-md">
             <Form
                 onSubmit={handleSubmit}
-                render={({ handleSubmit, form, form: { getState } }) => (
-                    <form
-                        onSubmit={(event) => {
-                            handleSubmit(event);
-                            form.reset();
-                        }}
-                        className="flex flex-row justify-center items-center space-x-2 p-6 rounded-md"
-                    >
-                        <div className="flex flex-row justify-between p-2 border w-full border-gray-500 shadow-md rounded-md outline-none bg-transparent focus-within:border-blue-main focus-within:shadow-xl">
-                            <div className="flex flex-wrap justify-start w-full">
-                                <ul className="relative flex flex-wrap">
-                                    {renderedUsersTags}
-                                    {isOpenList && (
-                                        <NewChatUsersList
-                                            newUser={
-                                                getState().values.name || ""
+                render={({ handleSubmit, form }) => (
+                    <>
+                        <form
+                            onSubmit={(event) => {
+                                handleSubmit(event);
+                                form.reset();
+                            }}
+                            className="flex flex-row justify-center items-center space-x-2 p-6 rounded-md"
+                        >
+                            <div className="flex flex-row justify-between p-2 border w-full border-gray-500 shadow-md rounded-md outline-none bg-transparent focus-within:border-blue-main focus-within:shadow-xl">
+                                <div className="flex flex-wrap justify-start w-full">
+                                    <ul className="flex flex-wrap">
+                                        {renderedUsersTags}
+                                    </ul>
+                                    <Field
+                                        name="username"
+                                        component="input"
+                                        placeholder="Press enter to add user"
+                                        parse={(value: string) => {
+                                            handleOpenListByValue(value);
+                                            return value;
+                                        }}
+                                        onKeyDown={(
+                                            event: React.KeyboardEvent<HTMLInputElement>
+                                        ) => {
+                                            if (event.key === "Enter") {
+                                                event.preventDefault();
+
+                                                handleAddUser(data[0]);
+                                                form.reset();
                                             }
-                                        />
-                                    )}
-                                </ul>
-                                <Field
-                                    name="name"
-                                    component="input"
-                                    placeholder="Press enter to add user"
-                                    className="flex-1 p-1 px-2 bg-transparent outline-none"
-                                />
+                                        }}
+                                        className="flex-1 p-1 px-2 bg-transparent outline-none"
+                                    />
+                                </div>
+                                <div className="hidden flex-row items-center space-x-2 text-xl text-gray-400 sm:flex">
+                                    <button
+                                        type="button"
+                                        onClick={handleOpenList}
+                                        className="border-gray-400 border-r pr-2"
+                                    >
+                                        {isOpenList ? (
+                                            <MdKeyboardArrowUp />
+                                        ) : (
+                                            <MdKeyboardArrowDown />
+                                        )}
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            handleClearUsers();
+                                            form.reset();
+                                        }}
+                                    >
+                                        <IoCloseSharp />
+                                    </button>
+                                </div>
                             </div>
-                            <div className="hidden flex-row items-center space-x-2 text-xl text-gray-400 sm:flex">
-                                <button
-                                    type="button"
-                                    onClick={handleOpenList}
-                                    className="border-gray-400 border-r pr-2"
-                                >
-                                    {isOpenList ? (
-                                        <MdKeyboardArrowUp />
-                                    ) : (
-                                        <MdKeyboardArrowDown />
-                                    )}
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        handleClearUsers();
-                                        form.reset();
-                                    }}
-                                >
-                                    <IoCloseSharp />
-                                </button>
-                            </div>
-                        </div>
-                        <button className="flex items-center justify-center bg-blue-main rounded-md w-50px h-50px text-xl">
-                            <IoAddOutline />
-                        </button>
-                    </form>
+                            <button
+                                type="submit"
+                                className="flex items-center justify-center bg-blue-main rounded-md w-50px h-50px text-xl"
+                            >
+                                <IoAddOutline />
+                            </button>
+                        </form>
+                        {isOpenList && (
+                            <NewChatUsersList
+                                data={data}
+                                newUser={
+                                    form.getFieldState("username")?.value || ""
+                                }
+                                onSubmit={handleAddUser}
+                                clearInputFn={() => form.reset()}
+                            />
+                        )}
+                    </>
                 )}
             />
         </div>

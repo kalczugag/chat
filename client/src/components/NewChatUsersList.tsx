@@ -1,37 +1,57 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useThunk } from "../hooks/use-thunk";
-import { fetchMatchedUsers, clearMatchedData, RootState } from "../store";
-import { useSelector } from "react-redux";
+import { fetchMatchedUsers, IUsers } from "../store";
+import { FormValues } from "./NewChatForm";
 
 type TUsersList = {
+    data: IUsers[];
     newUser: string;
+    onSubmit: (values: FormValues) => void;
+    clearInputFn: () => void;
 };
 
-const NewChatUsersList = ({ newUser }: TUsersList) => {
-    const dispatch = useDispatch();
+const NewChatUsersList = ({
+    data,
+    newUser,
+    onSubmit,
+    clearInputFn,
+}: TUsersList) => {
     const [doFetchMatchedUsers, isLoading] = useThunk(fetchMatchedUsers);
-    const data = useSelector((state: RootState) => state.users.matchedData);
+    const filteredUsersList = data.filter((user) => {
+        return (
+            user.username.toLowerCase().indexOf(newUser.toLowerCase()) !== -1
+        );
+    });
 
     useEffect(() => {
         if (!isLoading && newUser.trim().length > 0) {
             doFetchMatchedUsers(newUser.trim());
         }
-
-        if (newUser.trim().length <= 0) {
-            dispatch(clearMatchedData());
-        }
     }, [newUser]);
 
-    const renderedMatchedUsers = data?.map((user) => {
-        return <li>{user.username}</li>;
+    const renderedMatchedUsers = filteredUsersList?.map((user, index) => {
+        if (newUser.trim().length > 0) {
+            return (
+                <button
+                    onClick={() => {
+                        onSubmit(user);
+                        clearInputFn();
+                    }}
+                    key={index}
+                    className={`w-full text-left p-2 px-2 first ${
+                        index === 0 && "bg-login-input hover:opacity-90"
+                    } hover:bg-login-input`}
+                >
+                    {user.username}
+                </button>
+            );
+        }
+        return <></>;
     });
 
     return (
-        <div className="absolute -left-2 -bottom-24">
-            <ul className="text-black p-2 bg-gray-300 rounded">
-                {renderedMatchedUsers}
-            </ul>
+        <div className="mx-6 mr-20 text-gray-200 py-1 bg-login-bg rounded">
+            {renderedMatchedUsers}
         </div>
     );
 };
