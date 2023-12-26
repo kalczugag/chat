@@ -1,11 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { fetchChats } from "../thunks/fetchChats";
 import { addMessageToDB } from "../thunks/addMessageToDB";
+import { addChat } from "../thunks/addChat";
 import { addMessage } from "./messagesSlice";
 import { IUsers } from "./usersSlice";
 
 export interface IChatState {
-    _id: string;
+    _id?: string;
     chatName: string;
     isGroupChat: boolean;
     users: IUsers[];
@@ -44,6 +45,18 @@ const chatSlice = createSlice({
             state.data = action.payload;
         });
         builder.addCase(fetchChats.rejected, (state, action) => {
+            state.isLoading = false;
+            state.error = action.error;
+        });
+
+        builder.addCase(addChat.pending, (state, action) => {
+            state.isLoading = true;
+        });
+        builder.addCase(addChat.fulfilled, (state, action) => {
+            state.isLoading = false;
+            state.data?.push(action.payload);
+        });
+        builder.addCase(addChat.rejected, (state, action) => {
             state.isLoading = false;
             state.error = action.error;
         });

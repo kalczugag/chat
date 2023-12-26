@@ -1,1 +1,2 @@
-1. navigate through users list by arrow up and down
+1. private socket not working to fix
+2. message box to set username instead of _id

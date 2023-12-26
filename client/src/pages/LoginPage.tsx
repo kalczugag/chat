@@ -4,8 +4,8 @@ import { handleSignUser } from "../store";
 import LoginForm from "../components/LoginForm";
 
 export enum FormAction {
-    signin = "login",
-    signup = "register",
+    SignIn = "login",
+    SignUp = "register",
 }
 
 const LoginPage = () => {
@@ -19,8 +19,8 @@ const LoginPage = () => {
     };
 
     const actionPicker = location.pathname.startsWith("/login")
-        ? FormAction.signin
-        : FormAction.signup;
+        ? FormAction.SignIn
+        : FormAction.SignUp;
 
     return (
         <div className="flex flex-col items-center justify-center bg-login-bg w-screen h-screen md:pr-72">
@@ -37,7 +37,7 @@ const LoginPage = () => {
                 action={actionPicker}
                 isLoading={isSigning}
             />
-            {actionPicker === FormAction.signin && (
+            {actionPicker === FormAction.SignIn && (
                 <div className="text-md text-gray-400 mt-2">
                     <span>Don't have an account?</span>{" "}
                     <Link

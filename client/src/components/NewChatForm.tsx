@@ -1,35 +1,65 @@
 import { useState } from "react";
 import { Form, Field } from "react-final-form";
+import { useUser } from "../hooks/use-user";
+import { useThunk } from "../hooks/use-thunk";
 import { IoAddOutline, IoCloseSharp } from "react-icons/io5";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { RootState } from "../store";
+import { RootState, addChat } from "../store";
 import NewChatUsersList from "./NewChatUsersList";
 
 export type FormValues = {
     username: string;
 };
 
+export enum HoverAction {
+    On = -1,
+    Out = -2,
+}
+
 const NewChatForm = () => {
+    const { user } = useUser();
+    const [doAddChat, isAddingChat] = useThunk(addChat);
     const [users, setUsers] = useState<any[]>([]);
     const [isOpenList, setIsOpenList] = useState<boolean>(false);
+    const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const data = useSelector((state: RootState) => state.users.matchedData);
 
-    if (!data) {
+    if (!data || !user) {
         return <div>Loading...</div>;
     }
 
     const handleAddUser = (values: FormValues) => {
-        const userExists = users.some((user) => user === values.username);
+        const userExists = users.some(
+            (user) => user.username === values.username
+        );
 
         if (values.username && !userExists) {
-            setUsers((curr) => [...curr, values.username]);
-            setIsOpenList(false);
+            setUsers((curr) => [...curr, values]);
         }
+
+        setSelectedIndex(0);
     };
 
     const handleSubmit = () => {
-        console.log(users);
+        if (users.length > 0) {
+            const isGroup = users.length >= 2 ? true : false;
+
+            const data = {
+                chatName: "New Chat",
+                isGroutChat: isGroup,
+                users: users.concat({ _id: user._id, username: user.username }),
+                groupAdmin: user._id,
+            };
+
+            try {
+                doAddChat(data);
+            } catch (err: unknown) {
+                console.error(err);
+            }
+
+            handleClearUsers();
+        }
     };
 
     const handleRemoveUser = (userIndex: number) => {
@@ -38,17 +68,32 @@ const NewChatForm = () => {
 
     const handleClearUsers = () => {
         setUsers([]);
+        setIsOpenList(false);
     };
 
     const handleOpenList = () => {
-        if (data.length > 0) setIsOpenList(!isOpenList);
+        if (data.length > 0) {
+            setSelectedIndex(0);
+            setIsOpenList(!isOpenList);
+        }
+    };
+    const handlehoverOverList = (action: number) => {
+        const prevIndex = selectedIndex;
+
+        if (action === HoverAction.On) {
+            setSelectedIndex(HoverAction.On);
+        } else if (action === HoverAction.Out) {
+            setSelectedIndex(prevIndex);
+        }
     };
 
-    const handleOpenListByValue = (value: string) => {
-        if (value.trim().length > 0) {
-            setIsOpenList(true);
-        } else {
-            setIsOpenList(false);
+    const handleIndexChange = (
+        event: React.KeyboardEvent<HTMLInputElement>,
+        index: number
+    ) => {
+        event.preventDefault();
+        if (index >= 0 && index <= data.length - 1) {
+            setSelectedIndex(index);
         }
     };
 
@@ -58,7 +103,7 @@ const NewChatForm = () => {
                 key={index}
                 className="flex items-center justify-between bg-gray-200 text-black p-1 pl-2 m-1"
             >
-                <span>{user}</span>
+                <span>{user.username}</span>
                 <button
                     type="button"
                     onClick={() => handleRemoveUser(index)}
@@ -88,26 +133,49 @@ const NewChatForm = () => {
                                     <ul className="flex flex-wrap">
                                         {renderedUsersTags}
                                     </ul>
-                                    <Field
-                                        name="username"
-                                        component="input"
-                                        placeholder="Press enter to add user"
-                                        parse={(value: string) => {
-                                            handleOpenListByValue(value);
-                                            return value;
-                                        }}
-                                        onKeyDown={(
-                                            event: React.KeyboardEvent<HTMLInputElement>
-                                        ) => {
-                                            if (event.key === "Enter") {
-                                                event.preventDefault();
-
-                                                handleAddUser(data[0]);
-                                                form.reset();
-                                            }
-                                        }}
-                                        className="flex-1 p-1 px-2 bg-transparent outline-none"
-                                    />
+                                    <Field name="username">
+                                        {(props) => (
+                                            <input
+                                                {...props.input}
+                                                type="text"
+                                                className="flex-1 p-1 px-2 bg-transparent outline-none"
+                                                placeholder="Press enter to add user"
+                                                onFocus={() => {
+                                                    setIsOpenList(true);
+                                                    setSelectedIndex(0);
+                                                }}
+                                                onBlur={() =>
+                                                    setIsOpenList(false)
+                                                }
+                                                onKeyDown={(
+                                                    event: React.KeyboardEvent<HTMLInputElement>
+                                                ) => {
+                                                    if (event.key === "Enter") {
+                                                        event.preventDefault();
+                                                        handleAddUser(
+                                                            data[selectedIndex]
+                                                        );
+                                                        form.reset();
+                                                    } else if (
+                                                        event.key ===
+                                                        "ArrowDown"
+                                                    ) {
+                                                        handleIndexChange(
+                                                            event,
+                                                            selectedIndex + 1
+                                                        );
+                                                    } else if (
+                                                        event.key === "ArrowUp"
+                                                    ) {
+                                                        handleIndexChange(
+                                                            event,
+                                                            selectedIndex - 1
+                                                        );
+                                                    }
+                                                }}
+                                            />
+                                        )}
+                                    </Field>
                                 </div>
                                 <div className="hidden flex-row items-center space-x-2 text-xl text-gray-400 sm:flex">
                                     <button
@@ -134,6 +202,7 @@ const NewChatForm = () => {
                             </div>
                             <button
                                 type="submit"
+                                disabled={isAddingChat}
                                 className="flex items-center justify-center bg-blue-main rounded-md w-50px h-50px text-xl"
                             >
                                 <IoAddOutline />
@@ -145,7 +214,9 @@ const NewChatForm = () => {
                                 newUser={
                                     form.getFieldState("username")?.value || ""
                                 }
+                                selectedIndex={selectedIndex}
                                 onSubmit={handleAddUser}
+                                onHoverFn={handlehoverOverList}
                                 clearInputFn={() => form.reset()}
                             />
                         )}

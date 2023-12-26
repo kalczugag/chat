@@ -52,12 +52,9 @@ export default (app: Express) => {
     app.post("/api/chat", requireLogin, async (req, res) => {
         try {
             const chatBody: IChat = req.body;
+            console.log(chatBody);
 
-            if (
-                !chatBody.isGroupChat ||
-                !chatBody.users ||
-                chatBody.users.length === 0
-            ) {
+            if (!chatBody.users || chatBody.users.length === 0) {
                 return res.status(400).send({ message: "Invalid input data" });
             }
 

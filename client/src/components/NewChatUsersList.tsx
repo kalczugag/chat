@@ -2,18 +2,23 @@ import { useEffect } from "react";
 import { useThunk } from "../hooks/use-thunk";
 import { fetchMatchedUsers, IUsers } from "../store";
 import { FormValues } from "./NewChatForm";
+import { HoverAction } from "./NewChatForm";
 
 type TUsersList = {
     data: IUsers[];
     newUser: string;
+    selectedIndex: number;
     onSubmit: (values: FormValues) => void;
+    onHoverFn: (action: HoverAction) => void;
     clearInputFn: () => void;
 };
 
 const NewChatUsersList = ({
     data,
     newUser,
+    selectedIndex,
     onSubmit,
+    onHoverFn,
     clearInputFn,
 }: TUsersList) => {
     const [doFetchMatchedUsers, isLoading] = useThunk(fetchMatchedUsers);
@@ -33,20 +38,25 @@ const NewChatUsersList = ({
         if (newUser.trim().length > 0) {
             return (
                 <button
+                    key={index}
                     onClick={() => {
+                        //not working idk why
                         onSubmit(user);
                         clearInputFn();
                     }}
-                    key={index}
+                    onMouseOver={() => onHoverFn(HoverAction.On)}
+                    onMouseOut={() => onHoverFn(HoverAction.Out)}
                     className={`w-full text-left p-2 px-2 first ${
-                        index === 0 && "bg-login-input hover:opacity-90"
+                        selectedIndex === index &&
+                        "bg-login-input hover:opacity-90"
                     } hover:bg-login-input`}
                 >
                     {user.username}
                 </button>
             );
         }
-        return <></>;
+
+        return null;
     });
 
     return (
