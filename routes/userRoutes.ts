@@ -26,7 +26,7 @@ export default (app: Express) => {
 
             if (
                 user._id.toString() === req.user?._id ||
-                (isAdmin && req.query.password)
+                (isAdmin && password)
             ) {
                 const responseData: Partial<IUser> = {
                     _id: user._id,
@@ -38,7 +38,7 @@ export default (app: Express) => {
                     responseData.pic = user.pic;
                 }
 
-                if (isAdmin && req.query.password) {
+                if (isAdmin && password) {
                     responseData.password = user.password;
                 }
 
