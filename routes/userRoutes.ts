@@ -3,7 +3,7 @@ import session from "express-session";
 import passport from "passport";
 import keys from "../config/keys";
 import requireLogin from "../middlewares/requireLogin";
-import { User } from "../models/User";
+import { IUser, User } from "../models/User";
 
 export default (app: Express) => {
     app.get("/", (req, res) => {
@@ -15,13 +15,40 @@ export default (app: Express) => {
     app.get("/api/user/:userId", requireLogin, async (req, res) => {
         try {
             const userId = req.params.userId;
+            const { pic, password } = req.query;
+            const isAdmin = req.user?.isAdmin;
 
             const user = await User.findById(userId);
 
-            res.status(200).send(user);
-        } catch (err: unknown) {
+            if (!user) {
+                return res.status(404).send({ message: "User not found" });
+            }
+
+            if (
+                user._id.toString() === req.user?._id ||
+                (isAdmin && req.query.password)
+            ) {
+                const responseData: Partial<IUser> = {
+                    _id: user._id,
+                    username: user.username,
+                    isAdmin: user.isAdmin,
+                };
+
+                if (pic) {
+                    responseData.pic = user.pic;
+                }
+
+                if (isAdmin && req.query.password) {
+                    responseData.password = user.password;
+                }
+
+                return res.status(200).send(responseData);
+            } else {
+                return res.status(403).send({ message: "Unauthorized access" });
+            }
+        } catch (err) {
             console.error(err);
-            res.status(500).send({ message: "No user found" });
+            res.status(500).send({ message: "Internal server error" });
         }
     });
 

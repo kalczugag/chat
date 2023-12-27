@@ -30,11 +30,11 @@ const NewChatForm = () => {
     }
 
     const handleAddUser = (values: FormValues) => {
-        const userExists = users.some(
-            (user) => user.username === values.username
-        );
+        const userExists = users.some((user) => {
+            return user.username === values.username;
+        });
 
-        if (values.username && !userExists) {
+        if (values?.username && !userExists) {
             setUsers((curr) => [...curr, values]);
         }
 
@@ -54,6 +54,7 @@ const NewChatForm = () => {
 
             try {
                 doAddChat(data);
+                console.log(data);
             } catch (err: unknown) {
                 console.error(err);
             }

@@ -25,10 +25,12 @@ const MsgContentInput = ({
     addMsgFn,
 }: TMsgInput) => {
     const { user } = useUser();
-
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
     });
+    const userToSend = chatData?.users.find(
+        (recipient) => recipient._id !== user?._id
+    );
 
     const handleSendMessage = (value: TFormValues) => {
         const messageObj: IMsgData = {
@@ -36,6 +38,8 @@ const MsgContentInput = ({
             content: value.content,
             chatId,
         };
+
+        console.log(userToSend);
 
         if (messageObj.content) {
             if ("emit" in socket) {
@@ -45,11 +49,13 @@ const MsgContentInput = ({
                         messageObj,
                         `group/${chatData?._id}`
                     );
+                    addMsgFn(messageObj);
+                } else if (userToSend) {
+                    socket.emit("send_msg", messageObj, `priv/${userToSend}`);
+                    addMsgFn(messageObj);
                 } else {
-                    socket.emit("send_msg", messageObj, `priv/${chatData}`);
+                    console.error("User to send private message not found");
                 }
-
-                addMsgFn(messageObj);
             }
         } else {
             console.error("Value can't be empty");

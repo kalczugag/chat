@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 export interface IUser {
     _id: string;
     username: string;
-    password: string;
+    password?: string;
     pic?: string;
     isAdmin?: boolean;
 }
@@ -16,7 +16,7 @@ declare global {
 
 const userSchema = new Schema<IUser>({
     username: { type: "String", required: true },
-    password: { type: "String", required: true },
+    password: { type: "String", required: false },
     pic: { type: "String", required: false },
     isAdmin: {
         type: Boolean,

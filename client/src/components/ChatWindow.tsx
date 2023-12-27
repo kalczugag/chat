@@ -34,16 +34,26 @@ const ChatWindow = () => {
     );
 
     useEffect(() => {
-        if (chatData?.isGroupChat && socket && "emit" in socket) {
-            socket.emit("join_group", chatId);
+        if (user?._id && socket && "emit" in socket) {
+            socket.emit("set_user_id", user._id);
+
+            if (chatData?.isGroupChat) {
+                socket.emit("join_group", chatId);
+            }
         }
-    }, [chatData, chatId, socket]);
+    }, [user, chatData, chatId, socket]);
 
     useEffect(() => {
         if (socket && "on" in socket) {
-            socket.on("receive_msg", (msg: IMsgData) => {
-                handleAddMsgToState(msg);
-            });
+            if (chatData?.isGroupChat) {
+                socket.on("receive_msg", (msg: IMsgData) => {
+                    handleAddMsgToState(msg);
+                });
+            } else {
+                socket.on("private_msg", (msg: IMsgData) => {
+                    handleAddMsgToState(msg);
+                });
+            }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [socket]);

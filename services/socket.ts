@@ -8,30 +8,6 @@ export default (httpServer: HttpServer) => {
     const userSocketMap = new Map<string, string>(); // Map to store user IDs and socket IDs
     let chatId: string;
 
-    const saveMessageToDB = async (
-        msg: any
-    ): Promise<{ success: boolean; error?: string }> => {
-        try {
-            const newMessage = new Message(msg);
-            await newMessage.save();
-
-            await Chat.findByIdAndUpdate(
-                chatId,
-                {
-                    $set: {
-                        latestMessage: msg.content,
-                    },
-                },
-                { new: true }
-            );
-
-            return { success: true };
-        } catch (err: unknown) {
-            console.error("Error saving message: ", err);
-            return { success: false, error: "Error saving message" };
-        }
-    };
-
     io.on("connection", (socket: Socket) => {
         //Messages types:
         //private message ex. ('priv/userId')
@@ -44,7 +20,7 @@ export default (httpServer: HttpServer) => {
 
         socket.on("set_user_id", (userId: string) => {
             // Store the user ID and socket ID in the map
-            userSocketMap.set(userId, socket.id);
+            userSocketMap.set(`priv/${userId}`, socket.id);
         });
 
         socket.on("send_msg", async (msg: any, to: string) => {
@@ -52,14 +28,11 @@ export default (httpServer: HttpServer) => {
                 socket.broadcast.to(to).emit("receive_msg", msg);
             } else {
                 const recipientSocketId = userSocketMap.get(to);
+                console.log(recipientSocketId, userSocketMap);
 
                 if (recipientSocketId) {
                     // Emit the private message to the specific recipient
-                    io.to(recipientSocketId).emit(
-                        "private_msg",
-                        socket.id,
-                        msg
-                    );
+                    io.to(recipientSocketId).emit("private_msg", msg);
                 } else {
                     // Handle the case where the recipient's socket ID is not found
                     console.error(`Socket ID not found for user ID: ${to}`);
