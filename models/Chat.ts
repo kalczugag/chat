@@ -4,7 +4,7 @@ export interface IChat {
     _id?: string;
     chatName: string;
     isGroupChat: boolean;
-    users: Types.ObjectId[];
+    users: Types.ObjectId[] | { username: string; _id: Types.ObjectId }[];
     latestMessage?: string;
     groupAdmin?: Types.ObjectId;
 }
