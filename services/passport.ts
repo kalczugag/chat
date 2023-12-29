@@ -36,7 +36,7 @@ passport.use(
 
                     const isValid = authUtils.comparePassword(
                         password,
-                        user.password
+                        user?.password
                     );
 
                     if (isValid) {
