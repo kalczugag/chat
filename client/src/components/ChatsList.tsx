@@ -17,7 +17,7 @@ const ChatsList = () => {
     }, [data, doFetchChats]);
 
     if (!data || fetchingChats) {
-        return <div>Loading...</div>;
+        return null;
     }
 
     const renderedChats = data?.map((chat) => {

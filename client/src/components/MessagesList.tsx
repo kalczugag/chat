@@ -3,6 +3,7 @@ import { fetchMessages, IChatState, IMsgData } from "../store";
 import { useThunk } from "../hooks/use-thunk";
 import MessageBox from "./MessageBox";
 import ScrollBar from "./ScrollBar";
+import { useUser } from "../hooks/use-user";
 
 type TMessagesListProps = {
     chatData: IChatState;
@@ -17,6 +18,9 @@ const MessagesList = ({
 }: TMessagesListProps) => {
     const [page, setPage] = useState<number>(1);
     const [doFetchMessages, isLoading] = useThunk(fetchMessages);
+    const { user } = useUser();
+
+    console.log("first");
 
     const PAGINATION_FETCH_SETTINGS = {
         chatId: chatData?._id,

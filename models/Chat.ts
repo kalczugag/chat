@@ -1,10 +1,11 @@
 import mongoose, { Schema, Types } from "mongoose";
+import { IUser } from "./User";
 
 export interface IChat {
     _id?: string;
     chatName: string;
     isGroupChat: boolean;
-    users: Types.ObjectId[] | { username: string; _id: Types.ObjectId }[];
+    users: IUser[];
     latestMessage?: string;
     groupAdmin?: Types.ObjectId;
 }
@@ -13,7 +14,15 @@ const chatSchema = new Schema<IChat>(
     {
         chatName: { type: String, trim: true },
         isGroupChat: { type: Boolean, default: false },
-        users: [{ type: Schema.Types.ObjectId, ref: "User" }],
+        users: [
+            {
+                _id: {
+                    type: String,
+                    required: true,
+                },
+                username: { type: String, required: true },
+            },
+        ],
         latestMessage: {
             type: String,
             default: "Say Hello",

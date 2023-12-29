@@ -2,7 +2,6 @@ import { MdOpenInNew, MdLogout } from "react-icons/md";
 import { isMobile } from "react-device-detect";
 import { Link } from "react-router-dom";
 import ChatsList from "./ChatsList";
-import axios from "axios";
 
 const Sidebar = () => {
     return (

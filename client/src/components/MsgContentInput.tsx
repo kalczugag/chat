@@ -39,8 +39,6 @@ const MsgContentInput = ({
             chatId,
         };
 
-        console.log(userToSend);
-
         if (messageObj.content) {
             if ("emit" in socket) {
                 if (chatData?.isGroupChat) {
@@ -51,7 +49,11 @@ const MsgContentInput = ({
                     );
                     addMsgFn(messageObj);
                 } else if (userToSend) {
-                    socket.emit("send_msg", messageObj, `priv/${userToSend}`);
+                    socket.emit(
+                        "send_msg",
+                        messageObj,
+                        `priv/${userToSend._id}`
+                    );
                     addMsgFn(messageObj);
                 } else {
                     console.error("User to send private message not found");

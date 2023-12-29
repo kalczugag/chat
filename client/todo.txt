@@ -1,2 +1,2 @@
-1. private socket not working to fix
-2. message box to set username instead of _id
+1. only send messages save to db
+2. message box username instead of _id

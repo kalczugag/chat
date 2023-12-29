@@ -64,7 +64,7 @@ const ChatWindow = () => {
     };
 
     if (!chatData || !user || !filteredMessages) {
-        return <div>Loading...</div>;
+        return null;
     }
 
     return (
