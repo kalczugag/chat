@@ -74,7 +74,7 @@ const ChatWindow = () => {
 
     return (
         <div className="flex flex-col w-full">
-            <ChatHeader data="x" />
+            <ChatHeader data={chatData} />
             <div
                 className={`flex flex-col justify-end overflow-y-hidden bg-gradient-to-b from-transparent to-login-input text-white p-6 h-full rounded-md ${
                     isOpen && "hidden"

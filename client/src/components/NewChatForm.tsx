@@ -43,18 +43,17 @@ const NewChatForm = () => {
 
     const handleSubmit = () => {
         if (users.length > 0) {
-            const isGroup = users.length >= 2 ? true : false;
+            const isGroup = users.length > 1 ? true : false;
 
             const data = {
                 chatName: "New Chat",
-                isGroutChat: isGroup,
+                isGroupChat: isGroup,
                 users: users.concat({ _id: user._id, username: user.username }),
                 groupAdmin: user._id,
             };
 
             try {
                 doAddChat(data);
-                console.log(data);
             } catch (err: unknown) {
                 console.error(err);
             }
