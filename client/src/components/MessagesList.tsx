@@ -1,26 +1,22 @@
-import { useEffect, useRef, useState } from "react";
-import { fetchMessages, IChatState, IMsgData } from "../store";
+import { useEffect, useState } from "react";
+import { fetchMessages, IChatState, IMsgData, IUsers } from "../store";
 import { useThunk } from "../hooks/use-thunk";
 import MessageBox from "./MessageBox";
 import ScrollBar from "./ScrollBar";
-import { useUser } from "../hooks/use-user";
 
 type TMessagesListProps = {
     chatData: IChatState;
+    userToSend?: IUsers;
     messagesData: IMsgData[];
-    userId: string;
 };
 
 const MessagesList = ({
-    userId,
+    userToSend,
     chatData,
     messagesData,
 }: TMessagesListProps) => {
     const [page, setPage] = useState<number>(1);
     const [doFetchMessages, isLoading] = useThunk(fetchMessages);
-    const { user } = useUser();
-
-    console.log("first");
 
     const PAGINATION_FETCH_SETTINGS = {
         chatId: chatData?._id,
@@ -49,7 +45,7 @@ const MessagesList = ({
     };
 
     const renderedMessageBoxes = messagesData.map((msg, index) => {
-        return <MessageBox key={index} data={msg} />;
+        return <MessageBox key={index} data={msg} userToSend={userToSend} />;
     });
 
     return (

@@ -1,36 +1,35 @@
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Form, Field } from "react-final-form";
 import { Socket } from "socket.io-client";
-import { RootState } from "../store";
+import { IUsers, addMessageToDB, addMessage, RootState } from "../store";
 import { useUser } from "../hooks/use-user";
+import { useThunk } from "../hooks/use-thunk";
 import { IoMdArrowDropup } from "react-icons/io";
 import { IMsgData } from "../store/slices/messagesSlice";
 import { findChatById } from "../utils/functions/findChatById";
 
 type TMsgInput = {
     socket: Socket;
+    userToSend?: IUsers;
     chatId?: string;
-    isLoading: boolean;
-    addMsgFn: (msg: IMsgData) => void;
 };
 
 type TFormValues = {
     content: string;
 };
 
-const MsgContentInput = ({
-    socket,
-    chatId,
-    isLoading,
-    addMsgFn,
-}: TMsgInput) => {
+const MsgContentInput = ({ socket, userToSend, chatId }: TMsgInput) => {
     const { user } = useUser();
+    const dispatch = useDispatch();
+    const [doAddMsg, isAddingMsg] = useThunk(addMessageToDB);
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
     });
-    const userToSend = chatData?.users.find(
-        (recipient) => recipient._id !== user?._id
-    );
+
+    const handleAddMsg = (msg: IMsgData) => {
+        dispatch(addMessage(msg));
+        doAddMsg(msg);
+    };
 
     const handleSendMessage = (value: TFormValues) => {
         const messageObj: IMsgData = {
@@ -47,14 +46,14 @@ const MsgContentInput = ({
                         messageObj,
                         `group/${chatData?._id}`
                     );
-                    addMsgFn(messageObj);
+                    handleAddMsg(messageObj);
                 } else if (userToSend) {
                     socket.emit(
                         "send_msg",
                         messageObj,
                         `priv/${userToSend._id}`
                     );
-                    addMsgFn(messageObj);
+                    handleAddMsg(messageObj);
                 } else {
                     console.error("User to send private message not found");
                 }
@@ -85,10 +84,10 @@ const MsgContentInput = ({
                     />
 
                     <button
-                        disabled={isLoading}
+                        disabled={isAddingMsg}
                         className="flex items-center justify-center bg-blue-main rounded-md w-12 h-12 p-3 text-xl"
                     >
-                        {isLoading ? "..." : <IoMdArrowDropup />}
+                        {isAddingMsg ? "..." : <IoMdArrowDropup />}
                     </button>
                 </form>
             )}

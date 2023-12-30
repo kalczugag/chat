@@ -1,12 +1,13 @@
 import { useUser } from "../hooks/use-user";
-import { IMsgData } from "../store";
+import { IMsgData, IUsers } from "../store";
 import NameToPic from "./NameToPic";
 
 type TMessageBox = {
     data: IMsgData;
+    userToSend?: IUsers;
 };
 
-const MessageBox = ({ data }: TMessageBox) => {
+const MessageBox = ({ data, userToSend }: TMessageBox) => {
     const { user } = useUser();
 
     const isProfilePic = false ? (

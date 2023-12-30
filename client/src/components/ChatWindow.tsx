@@ -2,10 +2,9 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
-import { RootState, addMessageToDB, addMessage, IMsgData } from "../store";
+import { RootState, addMessage, IMsgData } from "../store";
 import { useSocket } from "../hooks/use-socket";
 import { useUser } from "../hooks/use-user";
-import { useThunk } from "../hooks/use-thunk";
 import { findChatById } from "../utils/functions/findChatById";
 import ChatHeader from "./ChatHeader";
 import MsgContentInput from "./MsgContentInput";
@@ -16,11 +15,13 @@ const ChatWindow = () => {
     const socket = useSocket();
     const { chatId } = useParams();
     const { user } = useUser();
-    const [doAddMsg, isAddingMsg] = useThunk(addMessageToDB);
     const { isOpen } = useSelector((state: RootState) => state.chat);
     const chatData = useSelector((state: RootState) => {
         if (chatId) return findChatById(state, chatId);
     });
+    const userToSend = chatData?.users.find(
+        (recipient) => recipient._id !== user?._id
+    );
 
     const getMessagesData = (state: RootState) => state.messages.data;
     const selectFilteredMessages = createSelector(
@@ -29,6 +30,7 @@ const ChatWindow = () => {
             return messagesData.filter((msg) => msg.chatId === chatId);
         }
     );
+
     const filteredMessages = useSelector((state: RootState) =>
         selectFilteredMessages(state)
     );
@@ -44,24 +46,27 @@ const ChatWindow = () => {
     }, [user, chatData, chatId, socket]);
 
     useEffect(() => {
+        const handleReceiveMsg = (msg: IMsgData) => {
+            dispatch(addMessage(msg));
+        };
+
         if (socket && "on" in socket) {
             if (chatData?.isGroupChat) {
-                socket.on("receive_msg", (msg: IMsgData) => {
-                    handleAddMsgToState(msg);
-                });
+                socket.on("receive_msg", handleReceiveMsg);
             } else {
-                socket.on("private_msg", (msg: IMsgData) => {
-                    handleAddMsgToState(msg);
-                });
+                socket.on("private_msg", handleReceiveMsg);
             }
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [socket]);
 
-    const handleAddMsgToState = (msg: IMsgData) => {
-        dispatch(addMessage(msg));
-        doAddMsg(msg);
-    };
+        return () => {
+            // Cleanup: Remove the event listeners
+            if (socket && "off" in socket) {
+                socket.off("receive_msg", handleReceiveMsg);
+                socket.off("private_msg", handleReceiveMsg);
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket, chatData]);
 
     if (!chatData || !user || !filteredMessages) {
         return null;
@@ -76,15 +81,14 @@ const ChatWindow = () => {
                 }`}
             >
                 <MessagesList
-                    userId={user._id}
+                    userToSend={userToSend}
                     chatData={chatData}
                     messagesData={filteredMessages}
                 />
                 <MsgContentInput
                     chatId={chatId}
+                    userToSend={userToSend}
                     socket={socket}
-                    isLoading={isAddingMsg}
-                    addMsgFn={handleAddMsgToState}
                 />
             </div>
         </div>

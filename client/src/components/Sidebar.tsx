@@ -15,9 +15,9 @@ const Sidebar = () => {
                 <Link to="/new" className="text-xl hover:text-blue-main">
                     <MdOpenInNew />
                 </Link>
-                <a href="/api/auth/logout">
+                {/* <a href="/api/auth/logout">
                     <MdLogout />
-                </a>
+                </a> */}
             </div>
             <ChatsList />
         </div>
