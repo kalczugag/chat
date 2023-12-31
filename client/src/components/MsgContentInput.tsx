@@ -8,7 +8,7 @@ import { IoMdArrowDropup } from "react-icons/io";
 import { IMsgData } from "../store/slices/messagesSlice";
 import { findChatById } from "../utils/functions/findChatById";
 
-type TMsgInput = {
+type Props = {
     socket: Socket;
     userToSend?: IUsers;
     chatId?: string;
@@ -18,7 +18,7 @@ type TFormValues = {
     content: string;
 };
 
-const MsgContentInput = ({ socket, userToSend, chatId }: TMsgInput) => {
+const MsgContentInput = ({ socket, userToSend, chatId }: Props) => {
     const { user } = useUser();
     const dispatch = useDispatch();
     const [doAddMsg, isAddingMsg] = useThunk(addMessageToDB);

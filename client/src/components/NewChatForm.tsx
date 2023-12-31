@@ -7,6 +7,7 @@ import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { RootState, addChat } from "../store";
 import NewChatUsersList from "./NewChatUsersList";
+import TagListItem from "./TagListItem";
 
 export type FormValues = {
     username: string;
@@ -99,19 +100,12 @@ const NewChatForm = () => {
 
     const renderedUsersTags = users.map((user, index) => {
         return (
-            <li
+            <TagListItem
                 key={index}
-                className="flex items-center justify-between bg-gray-200 text-black p-1 pl-2 m-1"
-            >
-                <span>{user.username}</span>
-                <button
-                    type="button"
-                    onClick={() => handleRemoveUser(index)}
-                    className="text-gray-400 px-1"
-                >
-                    <IoCloseSharp />
-                </button>
-            </li>
+                user={user}
+                index={index}
+                removeUser={handleRemoveUser}
+            />
         );
     });
 

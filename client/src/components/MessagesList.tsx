@@ -4,17 +4,13 @@ import { useThunk } from "../hooks/use-thunk";
 import MessageBox from "./MessageBox";
 import ScrollBar from "./ScrollBar";
 
-type TMessagesListProps = {
+type Props = {
     chatData: IChatState;
     userToSend?: IUsers;
     messagesData: IMsgData[];
 };
 
-const MessagesList = ({
-    userToSend,
-    chatData,
-    messagesData,
-}: TMessagesListProps) => {
+const MessagesList = ({ userToSend, chatData, messagesData }: Props) => {
     const [page, setPage] = useState<number>(1);
     const [doFetchMessages, isLoading] = useThunk(fetchMessages);
 

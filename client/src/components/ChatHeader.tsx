@@ -1,11 +1,11 @@
 import { IChatState } from "../store";
 import NameToPic, { Size } from "./NameToPic";
 
-type TChatHeader = {
+type Props = {
     data: IChatState;
 };
 
-const ChatHeader = ({ data }: TChatHeader) => {
+const ChatHeader = ({ data }: Props) => {
     const user1 = data.users[0].username;
     const user2 = data.users[1].username;
 

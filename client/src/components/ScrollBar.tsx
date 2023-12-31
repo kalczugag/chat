@@ -2,12 +2,12 @@ import { useRef, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { isMobile } from "react-device-detect";
 
-type TScrollBarProps = {
+type Props = {
     children: React.ReactNode;
     className: string;
 };
 
-const ScrollBar = ({ children, className }: TScrollBarProps) => {
+const ScrollBar = ({ children, className }: Props) => {
     const containerRef = useRef<HTMLDivElement>(null);
     const location = useLocation();
 

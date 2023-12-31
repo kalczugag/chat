@@ -1,12 +1,12 @@
 import TextField from "@mui/material/TextField";
 import { Field } from "react-final-form";
 
-type TInputField = {
+type Props = {
     name: string;
     type: string;
 };
 
-const InputField = ({ name, type }: TInputField) => {
+const InputField = ({ name, type }: Props) => {
     const required = (value: string) => (value ? undefined : "Required");
 
     return (

@@ -6,7 +6,7 @@ export enum Size {
     Large = 10,
 }
 
-type TNameToPicProps = {
+type Props = {
     content: string;
     size: Size;
     className?: string;
@@ -18,7 +18,7 @@ const isImage = (url: string): boolean => {
     return extension ? imageExtensions.includes(extension) : false;
 };
 
-const NameToPic = ({ content, size, className }: TNameToPicProps) => {
+const NameToPic = ({ content, size, className }: Props) => {
     return (
         <>
             {isImage(content) ? (

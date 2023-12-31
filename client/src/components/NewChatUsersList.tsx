@@ -4,7 +4,7 @@ import { fetchMatchedUsers, IUsers } from "../store";
 import { FormValues } from "./NewChatForm";
 import { HoverAction } from "./NewChatForm";
 
-type TUsersList = {
+type Props = {
     data: IUsers[];
     newUser: string;
     selectedIndex: number;
@@ -20,7 +20,7 @@ const NewChatUsersList = ({
     onSubmit,
     onHoverFn,
     clearInputFn,
-}: TUsersList) => {
+}: Props) => {
     const [doFetchMatchedUsers, isLoading] = useThunk(fetchMatchedUsers);
     const filteredUsersList = data.filter((user) => {
         return (

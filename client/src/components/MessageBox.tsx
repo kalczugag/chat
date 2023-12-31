@@ -2,12 +2,12 @@ import { useUser } from "../hooks/use-user";
 import { IMsgData, IUsers } from "../store";
 import NameToPic, { Size } from "./NameToPic";
 
-type TMessageBox = {
+type Props = {
     data: IMsgData;
     userToSend?: IUsers;
 };
 
-const MessageBox = ({ data, userToSend }: TMessageBox) => {
+const MessageBox = ({ data, userToSend }: Props) => {
     const { user } = useUser();
 
     const imSender = (
