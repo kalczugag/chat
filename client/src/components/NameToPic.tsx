@@ -29,7 +29,7 @@ const NameToPic = ({ content, size, className }: Props) => {
                 />
             ) : (
                 <div
-                    className={`flex justify-center items-center font-semibold w-${size} h-${size} bg-blue-main rounded-full ${
+                    className={`flex justify-center items-center font-semibold w-${size} h-${size} bg-orange-main text-gray-100 rounded-full ${
                         size === Size.Small ? "text-xs" : "text-md"
                     } ${className}`}
                 >

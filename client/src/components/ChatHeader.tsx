@@ -9,12 +9,10 @@ const ChatHeader = ({ data }: Props) => {
     const user1 = data.users[0].username;
     const user2 = data.users[1].username;
 
-    console.log(data.isGroupChat);
-
     return (
         <div className="flex flex-row justify-between p-2 pb-6 shadow-md">
             <div className="flex flex-row space-x-6 items-center">
-                <div className="relative text-white">
+                <div className="relative">
                     <NameToPic
                         content={user1 || ""}
                         size={Size.Large}

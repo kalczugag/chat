@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { IChatState, setChatWindow } from "../store";
+import NameToPic, { Size } from "./NameToPic";
 
 type Props = {
     data: IChatState;
@@ -13,6 +14,9 @@ const ChatsListItem = ({ data }: Props) => {
 
     const isActive = location.pathname === `/chats/${_id}`;
     const activeClass = isActive ? "bg-blue-main" : "";
+
+    const user1 = data.users[0].username;
+    const user2 = data.users[1].username;
 
     const handleOpenChat = () => {
         dispatch(setChatWindow(false));
@@ -31,15 +35,15 @@ const ChatsListItem = ({ data }: Props) => {
         >
             <div className="relative">
                 {/* to change ↓ */}
-                <img
-                    className="w-10 h-10 rounded-full border"
-                    src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
-                    alt="avatar"
+                <NameToPic
+                    content={user1 || ""}
+                    size={Size.Large}
+                    className="border border-login-bg"
                 />
-                <img
-                    className="absolute w-9 h-9 -bottom-4 -right-4 rounded-full border"
-                    src="https://png.pngtree.com/png-clipart/20200224/original/pngtree-cartoon-color-simple-male-avatar-png-image_5230557.jpg"
-                    alt="avatar"
+                <NameToPic
+                    content={user2 || ""}
+                    size={Size.Medium}
+                    className="absolute -bottom-4 -right-4 border border-login-bg"
                 />
             </div>
             <div className="hidden flex-col font-semibold md:flex">
