@@ -45,10 +45,10 @@ const MessagesList = ({ userToSend, chatData, messagesData }: Props) => {
     });
 
     return (
-        <ScrollBar className="mb-5 space-y-5">
+        <ScrollBar className="mb-5 space-y-1">
             <div className="flex justify-center">
                 <button
-                    className="font-semibold border rounded-xl px-2 bg-blue hover:bg-login-bg"
+                    className="font-semibold border rounded-xl px-2 mb-6 bg-blue hover:bg-login-bg"
                     onClick={handleLoadMoreMessages}
                 >
                     Load more

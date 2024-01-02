@@ -5,6 +5,7 @@ import { IUsers, addMessageToDB, addMessage, RootState } from "../store";
 import { useUser } from "../hooks/use-user";
 import { useThunk } from "../hooks/use-thunk";
 import { IoMdArrowDropup } from "react-icons/io";
+import { MdOutlineAttachment } from "react-icons/md";
 import { IMsgData } from "../store/slices/messagesSlice";
 import { findChatById } from "../utils/functions/findChatById";
 
@@ -76,12 +77,17 @@ const MsgContentInput = ({ socket, userToSend, chatId }: Props) => {
                     }}
                     className="flex flex-row justify-between space-x-2"
                 >
-                    <Field
-                        name="content"
-                        component="input"
-                        validate={required}
-                        className="w-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:border-blue-main focus:shadow-xl"
-                    />
+                    <div className="relative w-full">
+                        <Field
+                            name="content"
+                            component="input"
+                            validate={required}
+                            className="w-full h-full p-2 border border-gray-500 shadow-md rounded-md outline-none bg-transparent focus:border-blue-main focus:shadow-xl"
+                        />
+                        <button className="absolute top-0 bottom-0 right-4">
+                            <MdOutlineAttachment />
+                        </button>
+                    </div>
 
                     <button
                         disabled={isAddingMsg}

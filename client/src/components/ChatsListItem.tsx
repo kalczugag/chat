@@ -9,7 +9,7 @@ type Props = {
 
 const ChatsListItem = ({ data }: Props) => {
     const dispatch = useDispatch();
-    const { _id, chatName, users, latestMessage } = data;
+    const { _id, chatName, isGroupChat, users, latestMessage } = data;
     const location = useLocation();
 
     const isActive = location.pathname === `/chats/${_id}`;
@@ -47,7 +47,9 @@ const ChatsListItem = ({ data }: Props) => {
                 />
             </div>
             <div className="hidden flex-col font-semibold md:flex">
-                <h3 className="text-white">{chatName}</h3>
+                <h3 className="text-white">
+                    {isGroupChat ? chatName : `${user1} & ${user2}`}
+                </h3>
                 <p className="text-start text-sm text-gray-400">
                     {latestMessageShort}
                 </p>

@@ -1,9 +1,9 @@
 import { splitAndExtractInitials } from "../utils/functions/getInitials";
 
 export enum Size {
-    Small = 3,
-    Medium = 9,
-    Large = 10,
+    Small = "w-3 h-3",
+    Medium = "w-9 h-9",
+    Large = "w-10 h-10",
 }
 
 type Props = {
@@ -25,13 +25,13 @@ const NameToPic = ({ content, size, className }: Props) => {
                 <img
                     src={content}
                     alt="User avatar"
-                    className={`w-${size} h-${size} rounded-full ${className}`}
+                    className={`rounded-full ${size} ${className}`}
                 />
             ) : (
                 <div
-                    className={`flex justify-center items-center font-semibold w-${size} h-${size} bg-orange-main text-gray-100 rounded-full ${
+                    className={`flex justify-center items-center font-semibold bg-orange-main text-gray-100 rounded-full ${
                         size === Size.Small ? "text-xs" : "text-md"
-                    } ${className}`}
+                    } ${className} ${size}`}
                 >
                     {splitAndExtractInitials(content)}
                 </div>

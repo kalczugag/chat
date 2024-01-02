@@ -11,7 +11,9 @@ const Sidebar = () => {
             } p-2 md:p-4`}
         >
             <div className="flex flex-row justify-between items-center text-white pb-8">
-                <h2 className="text-2xl font-bold">Chats</h2>
+                <Link to="/" className="text-2xl font-bold hover:opacity-90">
+                    Chats
+                </Link>
                 <Link to="/new" className="text-xl hover:text-blue-main">
                     <MdOpenInNew />
                 </Link>

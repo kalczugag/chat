@@ -21,7 +21,7 @@ const MessageBox = ({ data, userToSend }: Props) => {
     return (
         <>
             {user?._id !== data.sender ? (
-                <div className="flex flex-row items-center space-x-2">
+                <div className="flex flex-row items-center py-3 space-x-2">
                     <NameToPic
                         content={userToSend?.username || ""}
                         size={Size.Large}
