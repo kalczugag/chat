@@ -74,29 +74,40 @@ export default (app: Express) => {
             const chatId = req.params.chatId;
             const messageBody = req.body;
 
-            const existingChat = await Chat.findOne({ _id: chatId });
+            if (messageBody.content.trim().length !== 0) {
+                const existingChat = await Chat.findOne({ _id: chatId });
 
-            if (existingChat && chatId === messageBody.chatId) {
-                await Chat.findByIdAndUpdate(
-                    chatId,
-                    {
-                        $set: {
-                            latestMessage: messageBody.content,
+                if (existingChat && chatId === messageBody.chatId) {
+                    await Chat.findByIdAndUpdate(
+                        chatId,
+                        {
+                            $set: {
+                                latestMessage: messageBody.content,
+                            },
                         },
-                    },
-                    { new: true }
-                );
+                        { new: true }
+                    );
 
-                const newMessage = new Message(messageBody);
-                await newMessage.save();
+                    const newMessage = new Message(messageBody);
+                    await newMessage.save();
 
-                return res.status(200).send(newMessage);
+                    return res.status(200).send(newMessage);
+                }
             }
         } catch (err) {
             console.error("Error finding chat or invalid chatId ", err);
             return res
                 .status(404)
                 .send({ message: "No such chat or invalid chatId" });
+        }
+    });
+
+    app.put("/api/chat/:chatId", requireLogin, async (req, res) => {
+        try {
+            const chatId = req.params.chatId;
+        } catch (err: unknown) {
+            console.log("Error in updating the chat : ", err);
+            return res.status(500).send({ message: "Server error" });
         }
     });
 };

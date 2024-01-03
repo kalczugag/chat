@@ -26,18 +26,30 @@ const MessagesList = ({ userToSend, chatData, messagesData }: Props) => {
             (!messagesData || messagesData.length === 0) &&
             !isLoading
         ) {
-            doFetchMessages(PAGINATION_FETCH_SETTINGS);
+            setPage((prevPage) => {
+                const updatedFetchSettings = {
+                    chatId: chatData?._id,
+                    page: 1,
+                    pageSize: 10,
+                };
+
+                doFetchMessages(updatedFetchSettings);
+                return 1;
+            });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chatData?._id, page]);
 
-    // useEffect(() => {
-    //     console.log(chatData?.users.length);
-    // }, [chatData]);
-
     const handleLoadMoreMessages = () => {
-        setPage(page + 1);
-        doFetchMessages(PAGINATION_FETCH_SETTINGS);
+        const updatedPage = page + 1;
+
+        const updatedFetchSettings = {
+            ...PAGINATION_FETCH_SETTINGS,
+            page: updatedPage,
+        };
+
+        setPage(updatedPage);
+        doFetchMessages(updatedFetchSettings);
     };
 
     const renderedMessageBoxes = messagesData.map((msg, index) => {
@@ -47,12 +59,14 @@ const MessagesList = ({ userToSend, chatData, messagesData }: Props) => {
     return (
         <ScrollBar className="mb-5 space-y-1">
             <div className="flex justify-center">
-                <button
-                    className="font-semibold border rounded-xl px-2 mb-6 bg-blue hover:bg-login-bg"
-                    onClick={handleLoadMoreMessages}
-                >
-                    Load more
-                </button>
+                {messagesData.length >= PAGINATION_FETCH_SETTINGS.pageSize ? (
+                    <button
+                        className="font-semibold border rounded-xl px-2 mb-6 bg-blue hover:bg-login-bg"
+                        onClick={handleLoadMoreMessages}
+                    >
+                        Load more
+                    </button>
+                ) : null}
             </div>
             {renderedMessageBoxes}
         </ScrollBar>

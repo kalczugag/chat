@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import LoadingPage from "./pages/LoadingPage";
 import ChatWindow from "./components/ChatWindow";
 import NewChatForm from "./components/NewChatForm";
+import ChatEditForm from "./components/ChatEditForm";
 
 const App = () => {
     const location = useLocation();
@@ -58,6 +59,7 @@ const App = () => {
                 <Route path="/" element={<DashboardPage />}>
                     <Route path="/chats/:chatId" element={<ChatWindow />} />
                     <Route path="/new" element={<NewChatForm />} />
+                    <Route path="/edit" element={<ChatEditForm />} />
                 </Route>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<LoginPage />} />

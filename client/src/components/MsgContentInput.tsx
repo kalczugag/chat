@@ -39,7 +39,7 @@ const MsgContentInput = ({ socket, userToSend, chatId }: Props) => {
             chatId,
         };
 
-        if (messageObj.content) {
+        if (messageObj.content && value.content.trim().length !== 0) {
             if ("emit" in socket) {
                 if (chatData?.isGroupChat) {
                     socket.emit(

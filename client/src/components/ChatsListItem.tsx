@@ -23,9 +23,9 @@ const ChatsListItem = ({ data }: Props) => {
     };
 
     const latestMessageShort =
-        latestMessage?.split("").length || 0 > 6
+        latestMessage?.split("").length! <= 10
             ? latestMessage
-            : latestMessage?.slice(0, 6) + "...";
+            : latestMessage?.slice(0, 10) + "...";
 
     return (
         <Link

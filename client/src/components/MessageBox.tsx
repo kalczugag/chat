@@ -12,7 +12,7 @@ const MessageBox = ({ data, userToSend }: Props) => {
 
     const imSender = (
         <div className="flex flex-col items-end">
-            <div className="flex-wrap max-w-xs break-all bg-blue-main rounded-2xl p-2 md:max-w-md xl:max-w-xl">
+            <div className="flex-wrap max-w-xs break-words bg-blue-main rounded-2xl p-2 md:max-w-md xl:max-w-xl">
                 {data.content}
             </div>
         </div>
@@ -30,7 +30,7 @@ const MessageBox = ({ data, userToSend }: Props) => {
                         <p className="absolute -top-4 text-xs text-gray-400 font-semibold pl-2">
                             {userToSend?.username}
                         </p>
-                        <div className="bg-login-input rounded-2xl p-2">
+                        <div className="bg-login-input break-words rounded-2xl p-2">
                             {data.content}
                         </div>
                     </div>
