@@ -18,12 +18,14 @@ export type TChatState = {
     data: null | IChatState[];
     isLoading: boolean;
     isOpen: boolean;
+    lastPage: number;
     error: any;
 };
 
 const initialState: TChatState = {
     data: null,
     isLoading: false,
+    lastPage: 1,
     isOpen: true,
     error: null,
 };
@@ -34,6 +36,9 @@ const chatSlice = createSlice({
     reducers: {
         setChatWindow(state, action) {
             state.isOpen = action.payload;
+        },
+        changeLastPage(state, action) {
+            state.lastPage = action.payload;
         },
     },
     extraReducers(builder) {
@@ -84,4 +89,4 @@ const chatSlice = createSlice({
 });
 
 export const chatReducer = chatSlice.reducer;
-export const { setChatWindow } = chatSlice.actions;
+export const { setChatWindow, changeLastPage } = chatSlice.actions;

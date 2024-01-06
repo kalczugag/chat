@@ -20,11 +20,7 @@ const httpServer = createServer(app);
 
 app.use(
     cors({
-        origin:
-            process.env.NODE_ENV === "production"
-                ? "https://chat-08j1.onrender.com"
-                : "*",
-        credentials: true,
+        origin: true,
     })
 );
 app.use(bodyParser.json());

@@ -30,13 +30,12 @@ const ChatWindow = () => {
             return messagesData.filter((msg) => msg.chatId === chatId);
         }
     );
-
     const filteredMessages = useSelector((state: RootState) =>
         selectFilteredMessages(state)
     );
 
     useEffect(() => {
-        if (user?._id && socket && "emit" in socket) {
+        if (user?._id && socket) {
             socket.emit("set_user_id", user._id);
 
             if (chatData?.isGroupChat) {
@@ -50,7 +49,7 @@ const ChatWindow = () => {
             dispatch(addMessage(msg));
         };
 
-        if (socket && "on" in socket) {
+        if (socket && typeof socket.on === "function") {
             if (chatData?.isGroupChat) {
                 socket.on("receive_msg", handleReceiveMsg);
             } else {
@@ -59,8 +58,7 @@ const ChatWindow = () => {
         }
 
         return () => {
-            // Cleanup: Remove the event listeners
-            if (socket && "off" in socket) {
+            if (socket && typeof socket.off === "function") {
                 socket.off("receive_msg", handleReceiveMsg);
                 socket.off("private_msg", handleReceiveMsg);
             }
@@ -88,7 +86,7 @@ const ChatWindow = () => {
                 <MsgContentInput
                     chatId={chatId}
                     userToSend={userToSend}
-                    socket={socket}
+                    socket={socket!}
                 />
             </div>
         </div>
