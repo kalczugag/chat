@@ -123,8 +123,6 @@ export default (app: Express) => {
         try {
             const chatId = req.params.chatId;
 
-            console.log(chatId);
-
             await Chat.deleteOne({ _id: chatId });
             res.status(200).send({
                 message: `Successfully removed chat with id ${chatId}`,
