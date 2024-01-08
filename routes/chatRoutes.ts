@@ -114,7 +114,23 @@ export default (app: Express) => {
 
             res.status(200).send(updatedChat);
         } catch (err: unknown) {
-            console.log("Error in updating the chat : ", err);
+            console.log("Error in updating the chat: ", err);
+            res.status(500).send({ message: "Server error" });
+        }
+    });
+
+    app.delete("/api/chat/:chatId", async (req, res) => {
+        try {
+            const chatId = req.params.chatId;
+
+            console.log(chatId);
+
+            await Chat.deleteOne({ _id: chatId });
+            res.status(200).send({
+                message: `Successfully removed chat with id ${chatId}`,
+            });
+        } catch (err: unknown) {
+            console.log("Error deleting chat: ", err);
             res.status(500).send({ message: "Server error" });
         }
     });
