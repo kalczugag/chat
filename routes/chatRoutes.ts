@@ -1,6 +1,6 @@
 import { Express } from "express";
 import requireLogin from "../middlewares/requireLogin";
-import { Message, IMessage } from "../models/Message";
+import { Message } from "../models/Message";
 import { Chat, IChat } from "../models/Chat";
 
 type paginationFetch = {
@@ -17,10 +17,10 @@ export default (app: Express) => {
                 users: user,
             });
 
-            return res.status(200).send(userChats);
+            res.status(200).send(userChats);
         } catch (err) {
             console.log("Error getting chats: ", err);
-            return res.status(500).send({ message: "Internal Server Error" });
+            res.status(500).send({ message: "Internal Server Error" });
         }
     });
 
@@ -42,10 +42,10 @@ export default (app: Express) => {
 
             const reversedMessages = messages.reverse();
 
-            return res.status(200).send(reversedMessages);
+            res.status(200).send(reversedMessages);
         } catch (err: unknown) {
             console.log("Error getting messages: ", err);
-            return res.status(500).send({ message: "Internal Server Error" });
+            res.status(500).send({ message: "Internal Server Error" });
         }
     });
 
@@ -62,10 +62,10 @@ export default (app: Express) => {
 
             await newChat.save();
 
-            return res.status(200).send(newChat);
+            res.status(200).send(newChat);
         } catch (err: unknown) {
             console.log("Error creating chat ", err);
-            return res.status(500).send({ message: "Missing values" });
+            res.status(500).send({ message: "Missing values" });
         }
     });
 
@@ -91,23 +91,31 @@ export default (app: Express) => {
                     const newMessage = new Message(messageBody);
                     await newMessage.save();
 
-                    return res.status(200).send(newMessage);
+                    res.status(200).send(newMessage);
                 }
             }
         } catch (err) {
             console.error("Error finding chat or invalid chatId ", err);
-            return res
-                .status(404)
-                .send({ message: "No such chat or invalid chatId" });
+            res.status(404).send({ message: "No such chat or invalid chatId" });
         }
     });
 
-    app.put("/api/chat/:chatId", requireLogin, async (req, res) => {
+    app.put("/api/chat", requireLogin, async (req, res) => {
         try {
-            const chatId = req.params.chatId;
+            const { _id, chatName, isGroupChat, users }: IChat = req.body;
+
+            const updatedChat = await Chat.findByIdAndUpdate(
+                _id,
+                {
+                    $set: { chatName, isGroupChat, users },
+                },
+                { new: true }
+            );
+
+            res.status(200).send(updatedChat);
         } catch (err: unknown) {
             console.log("Error in updating the chat : ", err);
-            return res.status(500).send({ message: "Server error" });
+            res.status(500).send({ message: "Server error" });
         }
     });
 };
