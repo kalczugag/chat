@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { IChatState, setChatWindow } from "../store";
-import NameToPic, { Size } from "./NameToPic";
+import Avatar, { Size } from "./Avatar";
 
 type Props = {
     data: IChatState;
@@ -35,12 +35,12 @@ const ChatsListItem = ({ data }: Props) => {
         >
             <div className="relative">
                 {/* to change ↓ */}
-                <NameToPic
+                <Avatar
                     content={user1 || ""}
                     size={Size.Large}
                     className="border border-login-bg"
                 />
-                <NameToPic
+                <Avatar
                     content={user2 || ""}
                     size={Size.Medium}
                     className="absolute -bottom-4 -right-4 border border-login-bg"

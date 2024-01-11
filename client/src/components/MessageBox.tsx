@@ -1,6 +1,6 @@
 import { useUser } from "../hooks/use-user";
 import { IMsgData, IUsers } from "../store";
-import NameToPic, { Size } from "./NameToPic";
+import Avatar, { Size } from "./Avatar";
 
 type Props = {
     data: IMsgData;
@@ -22,7 +22,7 @@ const MessageBox = ({ data, userToSend }: Props) => {
         <>
             {user?._id !== data.sender ? (
                 <div className="flex flex-row items-center py-3 space-x-2">
-                    <NameToPic
+                    <Avatar
                         content={userToSend?.username || ""}
                         size={Size.Large}
                     />

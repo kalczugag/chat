@@ -18,7 +18,7 @@ const isImage = (url: string): boolean => {
     return extension ? imageExtensions.includes(extension) : false;
 };
 
-const NameToPic = ({ content, size, className }: Props) => {
+const Avatar = ({ content, size, className }: Props) => {
     return (
         <>
             {isImage(content) ? (
@@ -40,4 +40,4 @@ const NameToPic = ({ content, size, className }: Props) => {
     );
 };
 
-export default NameToPic;
+export default Avatar;

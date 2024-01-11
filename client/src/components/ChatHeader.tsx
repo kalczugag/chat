@@ -1,7 +1,7 @@
 import { IChatState } from "../store";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import NameToPic, { Size } from "./NameToPic";
+import Avatar, { Size } from "./Avatar";
 
 type Props = {
     data: IChatState;
@@ -15,12 +15,12 @@ const ChatHeader = ({ data }: Props) => {
         <div className="flex flex-row justify-between p-2 pb-6 shadow-md text-white">
             <div className="flex flex-row space-x-6 items-center">
                 <div className="relative">
-                    <NameToPic
+                    <Avatar
                         content={user1 || ""}
                         size={Size.Large}
                         className="border border-login-bg"
                     />
-                    <NameToPic
+                    <Avatar
                         content={user2 || ""}
                         size={Size.Medium}
                         className="absolute -bottom-4 -right-4 border border-login-bg"
