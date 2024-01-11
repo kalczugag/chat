@@ -1,6 +1,7 @@
 import { IChatState } from "../store";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
+import { splitAndExtractInitials } from "../utils/functions/getInitials";
 import Avatar, { Size } from "./Avatar";
 
 type Props = {
@@ -16,15 +17,17 @@ const ChatHeader = ({ data }: Props) => {
             <div className="flex flex-row space-x-6 items-center">
                 <div className="relative">
                     <Avatar
-                        content={user1 || ""}
                         size={Size.Large}
                         className="border border-login-bg"
-                    />
+                    >
+                        {splitAndExtractInitials(user1 || "")}
+                    </Avatar>
                     <Avatar
-                        content={user2 || ""}
                         size={Size.Medium}
                         className="absolute -bottom-4 -right-4 border border-login-bg"
-                    />
+                    >
+                        {splitAndExtractInitials(user2 || "")}
+                    </Avatar>
                 </div>
                 <div className="flex flex-col font-semibold">
                     <h3>

@@ -1,5 +1,6 @@
 import { useUser } from "../hooks/use-user";
 import { IMsgData, IUsers } from "../store";
+import { splitAndExtractInitials } from "../utils/functions/getInitials";
 import Avatar, { Size } from "./Avatar";
 
 type Props = {
@@ -22,10 +23,9 @@ const MessageBox = ({ data, userToSend }: Props) => {
         <>
             {user?._id !== data.sender ? (
                 <div className="flex flex-row items-center py-3 space-x-2">
-                    <Avatar
-                        content={userToSend?.username || ""}
-                        size={Size.Large}
-                    />
+                    <Avatar size={Size.Large}>
+                        {splitAndExtractInitials(userToSend?.username || "")}
+                    </Avatar>
                     <div className="relative flex flex-col">
                         <p className="absolute -top-4 text-xs text-gray-400 font-semibold pl-2">
                             {userToSend?.username}

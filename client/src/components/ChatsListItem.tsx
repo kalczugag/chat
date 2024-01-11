@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import { IChatState, setChatWindow } from "../store";
+import { splitAndExtractInitials } from "../utils/functions/getInitials";
 import Avatar, { Size } from "./Avatar";
 
 type Props = {
@@ -35,16 +36,15 @@ const ChatsListItem = ({ data }: Props) => {
         >
             <div className="relative">
                 {/* to change ↓ */}
+                <Avatar size={Size.Large} className="border border-login-bg">
+                    {splitAndExtractInitials(user1 || "")}
+                </Avatar>
                 <Avatar
-                    content={user1 || ""}
-                    size={Size.Large}
-                    className="border border-login-bg"
-                />
-                <Avatar
-                    content={user2 || ""}
                     size={Size.Medium}
                     className="absolute -bottom-4 -right-4 border border-login-bg"
-                />
+                >
+                    {splitAndExtractInitials(user2 || "")}
+                </Avatar>
             </div>
             <div className="hidden flex-col font-semibold md:flex">
                 <h3 className="text-white">
