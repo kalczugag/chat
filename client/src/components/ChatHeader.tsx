@@ -1,16 +1,34 @@
+import { useState } from "react";
+import { createPortal } from "react-dom";
 import { IChatState } from "../store";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
 import { splitAndExtractInitials } from "../utils/functions/getInitials";
 import Avatar, { Size } from "./Avatar";
+import Modal from "./Modal";
 
 type Props = {
     data: IChatState;
 };
 
 const ChatHeader = ({ data }: Props) => {
+    const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+
     const user1 = data.users[0].username;
     const user2 = data.users[1].username;
+
+    const handleEdit = () => {
+        setIsOpenModal(true);
+    };
+
+    const modal = (
+        <Modal onClose={setIsOpenModal}>
+            <label>
+                Chat name
+                <input type="text" />
+            </label>
+        </Modal>
+    );
 
     return (
         <div className="flex flex-row justify-between p-2 pb-6 shadow-md text-white">
@@ -39,13 +57,14 @@ const ChatHeader = ({ data }: Props) => {
                 </div>
             </div>
             <div className="flex space-x-4">
-                <button className="hover:opacity-90">
+                <button onClick={handleEdit} className="hover:opacity-90">
                     <MdEdit />
                 </button>
                 <button className="hover:opacity-90">
                     <FaRegTrashAlt />
                 </button>
             </div>
+            {isOpenModal && createPortal(modal, document.body)}
         </div>
     );
 };
