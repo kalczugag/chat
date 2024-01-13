@@ -9,6 +9,10 @@ import { RootState, addChat } from "../store";
 import NewChatUsersList from "./NewChatUsersList";
 import TagListItem from "./TagListItem";
 
+type Props = {
+    usersData?: any[];
+};
+
 export type FormValues = {
     username: string;
 };
@@ -18,10 +22,10 @@ export enum HoverAction {
     Out = -2,
 }
 
-const NewChatForm = () => {
+const NewChatForm = ({ usersData }: Props) => {
     const { user } = useUser();
     const [doAddChat, isAddingChat] = useThunk(addChat);
-    const [users, setUsers] = useState<any[]>([]);
+    const [users, setUsers] = useState<any[]>([] || usersData);
     const [isOpenList, setIsOpenList] = useState<boolean>(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
     const data = useSelector((state: RootState) => state.users.matchedData);

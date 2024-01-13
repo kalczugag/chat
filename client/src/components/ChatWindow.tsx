@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { useParams } from "react-router-dom";
-import { RootState, addMessage, IMsgData } from "../store";
+import { RootState, addMessage, IMsgData, changeStatus } from "../store";
 import { useSocket } from "../hooks/use-socket";
 import { useUser } from "../hooks/use-user";
 import { findChatById } from "../utils/functions/findChatById";
@@ -43,6 +43,23 @@ const ChatWindow = () => {
             }
         }
     }, [user, chatData, chatId, socket]);
+
+    useEffect(() => {
+        const handleIsOnline = ({ isOnline }: { isOnline: boolean }) => {
+            dispatch(changeStatus(isOnline));
+        };
+
+        if (socket && typeof socket.on === "function") {
+            socket.on("isOnline", handleIsOnline);
+        }
+
+        return () => {
+            if (socket && typeof socket.off === "function") {
+                socket.off("isOnline", handleIsOnline);
+            }
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [socket]);
 
     useEffect(() => {
         const handleReceiveMsg = (msg: IMsgData) => {

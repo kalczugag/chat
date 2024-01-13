@@ -1,7 +1,5 @@
 import { Server as HttpServer } from "http";
 import { Server, Socket } from "socket.io";
-import { Message } from "../models/Message";
-import { Chat } from "../models/Chat";
 
 export default (httpServer: HttpServer) => {
     const io = new Server(httpServer);
@@ -9,9 +7,9 @@ export default (httpServer: HttpServer) => {
     let chatId: string;
 
     io.on("connection", (socket: Socket) => {
-        //Messages types:
-        //private message ex. ('priv/userId')
-        //group chat message ex. ('group/groupId')
+        // Messages types:
+        // private message ex. ('priv/userId')
+        // group chat message ex. ('group/groupId')
 
         socket.on("join_group", (groupId: string) => {
             socket.join(`group/${groupId}`);
@@ -20,7 +18,15 @@ export default (httpServer: HttpServer) => {
 
         socket.on("set_user_id", (userId: string) => {
             // Store the user ID and socket ID in the map
-            userSocketMap.set(`priv/${userId}`, socket.id);
+            const userKey = `priv/${userId}/${chatId}`;
+            userSocketMap.set(userKey, socket.id);
+
+            const onlineUsers = Array.from(userSocketMap.keys()).filter(
+                (key) => key.startsWith("priv/") && key.endsWith(`/${chatId}`)
+            );
+            if (onlineUsers.length >= 2) {
+                io.emit("isOnline", { isOnline: true });
+            }
         });
 
         socket.on("send_msg", async (msg: any, to: string) => {
@@ -28,6 +34,7 @@ export default (httpServer: HttpServer) => {
                 socket.broadcast.to(to).emit("receive_msg", msg);
             } else {
                 const recipientSocketId = userSocketMap.get(to);
+
                 console.log(recipientSocketId, userSocketMap);
 
                 if (recipientSocketId) {
@@ -47,6 +54,13 @@ export default (httpServer: HttpServer) => {
                     userSocketMap.delete(key);
                 }
             });
+
+            const onlineUsers = Array.from(userSocketMap.keys()).filter(
+                (key) => key.startsWith("priv/") && key.endsWith(`/${chatId}`)
+            );
+            if (onlineUsers.length >= 2) {
+                io.emit("isOnline", { isOnline: true });
+            }
         });
     });
 };
