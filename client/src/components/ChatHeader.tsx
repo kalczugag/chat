@@ -1,21 +1,27 @@
-import { IChatState, RootState } from "../store";
+import { IChatState, RootState, removeChat } from "../store";
 import { FaRegTrashAlt } from "react-icons/fa";
 import { splitAndExtractInitials } from "../utils/functions/getInitials";
 import Avatar, { Size } from "./Avatar";
 import ChatEditForm from "./ChatEditForm";
 import { useSelector } from "react-redux";
+import { useThunk } from "../hooks/use-thunk";
 
 type Props = {
     data: IChatState;
 };
 
 const ChatHeader = ({ data }: Props) => {
+    const [doRemoveChat, isRemovingChat] = useThunk(removeChat);
     const isOnline = useSelector((state: RootState) => state.chat.isOnline);
 
     console.log(isOnline);
 
     const user1 = data.users[0].username;
     const user2 = data.users[1].username;
+
+    const handleRemoveChat = () => {
+        doRemoveChat(data._id);
+    };
 
     return (
         <div className="flex flex-row justify-between p-2 pb-6 shadow-md text-white">
@@ -47,7 +53,11 @@ const ChatHeader = ({ data }: Props) => {
             </div>
             <div className="flex space-x-4 items-center">
                 <ChatEditForm />
-                <button className="hover:opacity-90">
+                <button
+                    onClick={handleRemoveChat}
+                    disabled={isRemovingChat}
+                    className="hover:opacity-90"
+                >
                     <FaRegTrashAlt />
                 </button>
             </div>

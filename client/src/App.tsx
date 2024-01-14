@@ -9,7 +9,7 @@ import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoadingPage from "./pages/LoadingPage";
 import ChatWindow from "./components/ChatWindow";
-import NewChatForm from "./components/NewChatForm";
+import NewChatPage from "./pages/NewChatPage";
 import ChatEditForm from "./components/ChatEditForm";
 
 const App = () => {
@@ -58,7 +58,7 @@ const App = () => {
             <Routes>
                 <Route path="/" element={<DashboardPage />}>
                     <Route path="/chats/:chatId" element={<ChatWindow />} />
-                    <Route path="/new" element={<NewChatForm />} />
+                    <Route path="/new" element={<NewChatPage />} />
                     <Route path="/edit" element={<ChatEditForm />} />
                 </Route>
                 <Route path="/login" element={<LoginPage />} />

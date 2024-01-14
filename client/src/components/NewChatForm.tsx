@@ -1,20 +1,24 @@
 import { useState } from "react";
 import { Form, Field } from "react-final-form";
 import { useUser } from "../hooks/use-user";
-import { useThunk } from "../hooks/use-thunk";
 import { IoAddOutline, IoCloseSharp } from "react-icons/io5";
 import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { RootState, addChat } from "../store";
+import { RootState } from "../store";
 import NewChatUsersList from "./NewChatUsersList";
 import TagListItem from "./TagListItem";
 
 type Props = {
     usersData?: any[];
+    onSubmit: (...args: any) => void;
+    action: (...args: any) => void;
+    isLoading?: boolean;
 };
 
 export type FormValues = {
     username: string;
+    handleSubmit?: () => void;
+    handleAction?: (values: FormValues) => void;
 };
 
 export enum HoverAction {
@@ -22,9 +26,8 @@ export enum HoverAction {
     Out = -2,
 }
 
-const NewChatForm = ({ usersData }: Props) => {
+const NewChatForm = ({ usersData, onSubmit, action }: Props) => {
     const { user } = useUser();
-    const [doAddChat, isAddingChat] = useThunk(addChat);
     const [users, setUsers] = useState<any[]>([] || usersData);
     const [isOpenList, setIsOpenList] = useState<boolean>(false);
     const [selectedIndex, setSelectedIndex] = useState<number>(0);
@@ -33,39 +36,6 @@ const NewChatForm = ({ usersData }: Props) => {
     if (!data || !user) {
         return <div>Loading...</div>;
     }
-
-    const handleAddUser = (values: FormValues) => {
-        const userExists = users.some((user) => {
-            return user.username === values.username;
-        });
-
-        if (values?.username && !userExists) {
-            setUsers((curr) => [...curr, values]);
-        }
-
-        setSelectedIndex(0);
-    };
-
-    const handleSubmit = () => {
-        if (users.length > 0) {
-            const isGroup = users.length > 1 ? true : false;
-
-            const data = {
-                chatName: "New Chat",
-                isGroupChat: isGroup,
-                users: users.concat({ _id: user._id, username: user.username }),
-                groupAdmin: user._id,
-            };
-
-            try {
-                doAddChat(data);
-            } catch (err: unknown) {
-                console.error(err);
-            }
-
-            handleClearUsers();
-        }
-    };
 
     const handleRemoveUser = (userIndex: number) => {
         setUsers([...users.filter((_, index) => userIndex !== index)]);
@@ -116,7 +86,7 @@ const NewChatForm = ({ usersData }: Props) => {
     return (
         <div className="w-full h-full bg-gradient-to-b from-transparent to-login-input text-white rounded-md">
             <Form
-                onSubmit={handleSubmit}
+                onSubmit={() => onSubmit({ users, handleClearUsers })}
                 render={({ handleSubmit, form }) => (
                     <>
                         <form
@@ -150,8 +120,13 @@ const NewChatForm = ({ usersData }: Props) => {
                                                 ) => {
                                                     if (event.key === "Enter") {
                                                         event.preventDefault();
-                                                        handleAddUser(
-                                                            data[selectedIndex]
+                                                        action(
+                                                            data[selectedIndex],
+                                                            {
+                                                                users,
+                                                                setUsers,
+                                                                setSelectedIndex,
+                                                            }
                                                         );
                                                         form.reset();
                                                     } else if (
@@ -200,7 +175,7 @@ const NewChatForm = ({ usersData }: Props) => {
                             </div>
                             <button
                                 type="submit"
-                                disabled={isAddingChat}
+                                disabled={false}
                                 className="flex items-center justify-center bg-blue-main rounded-md w-50px h-50px text-xl"
                             >
                                 <IoAddOutline />
@@ -213,7 +188,7 @@ const NewChatForm = ({ usersData }: Props) => {
                                     form.getFieldState("username")?.value || ""
                                 }
                                 selectedIndex={selectedIndex}
-                                onSubmit={handleAddUser}
+                                onSubmit={action}
                                 onHoverFn={handlehoverOverList}
                                 clearInputFn={() => form.reset()}
                             />

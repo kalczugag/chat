@@ -31,4 +31,5 @@ export * from "./thunks/fetchMessages";
 export * from "./thunks/fetchMatchedUsers";
 export * from "./thunks/addMessageToDB";
 export * from "./thunks/addChat";
+export * from "./thunks/removeChat";
 export * from "./thunks/handleSignUser";
