@@ -16,7 +16,6 @@
         "typescript": "^5.3.3"
     },
     "dependencies": {
-        "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
         "@types/bcrypt": "^5.0.2",
         "@types/cookie-session": "^2.0.47",
         "@types/cors": "^2.8.17",
