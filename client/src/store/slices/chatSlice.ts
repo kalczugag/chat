@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { fetchChats } from "../thunks/fetchChats";
 import { addMessageToDB } from "../thunks/addMessageToDB";
 import { addChat } from "../thunks/addChat";
@@ -88,10 +88,9 @@ const chatSlice = createSlice({
         });
         builder.addCase(removeChat.fulfilled, (state, action) => {
             state.isLoading = false;
-            console.log(action.payload);
-            // state.data = state.data?.filter((chat: IChatState) => {
-            //     return chat._id !== action.payload;
-            // });
+            state.data = state.data!.filter((chat: IChatState) => {
+                return chat._id !== action.payload;
+            });
         });
         builder.addCase(removeChat.rejected, (state, action) => {
             state.isLoading = false;

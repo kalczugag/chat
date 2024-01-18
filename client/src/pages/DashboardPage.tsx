@@ -34,6 +34,18 @@ const DashboardPage = () => {
     return (
         <div className="flex px-4 pt-4 h-full md:px-12 md:flex-row">
             {isMobile && !isOpen ? "" : <Sidebar />}
+            {!isOpen && (
+                <div className="flex flex-col items-center">
+                    <h1 className="text-white mx-auto mt-40 font-bold text-4xl">
+                        Dashboard
+                    </h1>
+                    <img
+                        src="/assets/images/wavingHand.png"
+                        alt="waving hand"
+                        className="w-1/2 h-1/2 object-contain"
+                    />
+                </div>
+            )}
             <Outlet />
         </div>
     );
