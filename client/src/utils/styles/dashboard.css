@@ -1,0 +1,15 @@
+@keyframes wave {
+    0% {
+        transform: rotate(20deg);
+    }
+    50% {
+        transform: rotate(-20deg);
+    }
+    100% {
+        transform: rotate(20deg);
+    }
+}
+
+.waving-hand-animation {
+    animation: wave 2s ease-in-out infinite;
+}
