@@ -1,10 +1,17 @@
 import { useEffect } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import {
+    Routes,
+    Route,
+    useLocation,
+    useNavigate,
+    matchPath,
+} from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useThunk } from "./hooks/use-thunk";
 import { useUser } from "./hooks/use-user";
 import { fetchUser, setSocket } from "./store";
 import { io } from "socket.io-client";
+import { config } from "./utils/config";
 import LoginPage from "./pages/LoginPage";
 import DashboardPage from "./pages/DashboardPage";
 import LoadingPage from "./pages/LoadingPage";
@@ -13,25 +20,31 @@ import NewChatPage from "./pages/NewChatPage";
 import ChatEditForm from "./components/ChatEditForm";
 
 const App = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
     const [doFetchUser, isLoadingUser, userError] = useThunk(fetchUser);
     const { user } = useUser();
 
     useEffect(() => {
-        if (!user && !isLoadingUser && !userError) {
+        const isProtectedRoute = config.protectedRoutes.some((route) => {
+            const match = location.pathname.startsWith(route);
+            return match;
+        });
+
+        if (!user && !isLoadingUser && !userError && isProtectedRoute) {
             doFetchUser();
         }
 
-        if (location.pathname === "/" && userError) {
+        if (location.pathname !== "/login" && userError) {
             console.error(
                 "Failed to get the current logged in user: ",
                 userError
             );
-            window.location.href = "/login";
+            navigate("/login");
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [doFetchUser, user, userError]);
+    }, [doFetchUser, user, userError, location.pathname, navigate]);
 
     useEffect(() => {
         const serverURI =
