@@ -54,7 +54,7 @@ We welcome contributions from the community! If you'd like to contribute, please
 1. **Fork the repository**.
 2. **Create a new branch**:
     ```sh
-    git checkout -b origin/main
+    git checkout -b feature/your-feature-name
     ```
 3. **Make your changes and commit them**:
     ```sh
@@ -62,7 +62,7 @@ We welcome contributions from the community! If you'd like to contribute, please
     ```
 4. **Push to the branch**:
     ```sh
-    git push origin main
+    git push origin feature/your-feature-name
     ```
 5. **Open a pull request**.
 
